@@ -28,16 +28,6 @@ namespace Client
         [OperationContract]
         bool UpdateClientOrder(string order_id, string id_order_product, string address, string order_status);
         [OperationContract]
-        List<Product> GetProducts();
-    }
-
-    public class Product //TODO: klasy do osobnych plikow
-    {
-        public string Key { get; set; }
-        public string Size { get; set; }
-        public string Color { get; set; }
-        public string Price { get; set; }
-        public string Type { get; set; }
-        public string Amount { get; set; }
+        ProductsList GetProducts();
     }
 }

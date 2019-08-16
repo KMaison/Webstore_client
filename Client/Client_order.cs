@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Domain
+namespace Client
 {
-    class Client_order
+    public class Client_order
     {
         public string Order_ID { get; set; }
         public string ID_order_product { get; set; }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Domain
+namespace Client
 {
-    public class Product 
+    public class Product
     {
         public string Key { get; set; }
         public string Size { get; set; }

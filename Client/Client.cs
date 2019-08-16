@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Domain
+namespace Client
 {
-    public class Client
+   public class Client
     {
         public string Pesel { get; set; }
         public string Firstname { get; set; }

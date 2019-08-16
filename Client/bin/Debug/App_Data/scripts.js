@@ -21,7 +21,6 @@ function AddProduct() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-    console.log(fn.e)
 	var key, size, color, price, type, amount;
 	key = document.getElementById("key").value;
 	size = document.getElementById("size").value;
@@ -43,6 +42,27 @@ function AddProduct() {
 	};
 
 	DoAjax("POST", "http://127.0.0.1/api/AddProduct", fn, params);
+}
+function AddOrderProduct() {
+    var fn = function (request) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        e = document.getElementById("resp");
+        e.innerHTML = request.responseText;
+    };
+    var id, amount, barcode;
+    amount = document.getElementById("amount").value;
+    barcode = document.getElementById("barcode").value;
+
+    var params = {
+        "order": {
+            "Amount": amount,
+            "Bar_code": barcode
+        }
+
+    };
+
+    DoAjax("POST", "http://127.0.0.1/api/AddOrderProduct", fn, params);
 }
 
 function ViewProducts() {
