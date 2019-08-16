@@ -15,12 +15,13 @@ function DoAjax(method, url, fn, params) {
 }
 
 function AddProduct() {
-	var fn = function (request) {
-		var e = document.getElementById("wynik");
-		e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-		e = document.getElementById("resp");
-		e.innerHTML = request.responseText;
-	};
+    var fn = function (request) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        e = document.getElementById("resp");
+        e.innerHTML = request.responseText;
+    };
+    console.log(fn.e)
 	var key, size, color, price, type, amount;
 	key = document.getElementById("key").value;
 	size = document.getElementById("size").value;
@@ -50,7 +51,9 @@ function ViewProducts() {
 		e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
 		e = document.getElementById("resp");
 		e.innerHTML = request.responseText;
-	};
+    };
+    console.log(fn)
+    console.log(fn.e)
 	var key, size, color, price, type, amount;
 	key = 0;
 	size = 0;
