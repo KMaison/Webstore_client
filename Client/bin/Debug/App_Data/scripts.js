@@ -76,10 +76,6 @@ function AddClientOrder() {
     id_order_products = document.getElementById("idorderproduct").value;
     address = document.getElementById("address").value;
     order_status = document.getElementById("orderstatus").value;
-    console.log("id:" + order_id);
-    console.log("products:" + id_order_products);
-    console.log("adr: " + address);
-    console.log("status:" + order_status);
     var params = {
         "order": {
             "Order_ID": order_id,
@@ -90,6 +86,29 @@ function AddClientOrder() {
     };
 
     DoAjax("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
+}
+function AddClient() {
+    var fn = function (request) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        e = document.getElementById("resp");
+        e.innerHTML = request.responseText;
+    };
+    var pesel, firstname, surname, orderID;
+    pesel = document.getElementById("orderid").value;
+    firstname = document.getElementById("firstname").value;
+    surname = document.getElementById("surname").value;
+    orderID = document.getElementById("orderid").value;
+    var params = {
+        "client": {
+            "Pesel": pesel,
+            "Firstname": firstname,
+            "Surname": surname,
+            "Order_ID": orderID
+        }
+    };
+
+    DoAjax("POST", "http://127.0.0.1/api/AddClient", fn, params);
 }
 
 function ViewProducts() {
