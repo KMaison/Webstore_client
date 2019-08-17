@@ -64,6 +64,29 @@ function AddOrderProduct() {
 
     DoAjax("POST", "http://127.0.0.1/api/AddOrderProduct", fn, params);
 }
+function AddClientOrder() {
+    var fn = function (request) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        e = document.getElementById("resp");
+        e.innerHTML = request.responseText;
+    };
+    var order_id, id_order_products, address, order_status;
+    order_id = document.getElementById("orderid").value;
+    id_order_products = document.getElementById("idorderproduct").value;
+    address = document.getElementById("address").value;
+    order_status = document.getElementById("orderstatus").value;
+    var params = {
+        "order": {
+            "Order_ID": order_id,
+            "ID_order_product":id_order_products,
+            "Address": address,
+            "Order_status":order_status
+        }
+    };
+
+    DoAjax("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
+}
 
 function ViewProducts() {
 	var fn = function (request) {

@@ -66,6 +66,11 @@ namespace Client
         bool AddOrderProduct(Order_products order);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "AddClientOrder", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+           RequestFormat = WebMessageFormat.Json)]
+        bool AddClientOrder(Client_order order);
+
+        [OperationContract]
         [WebGet(UriTemplate = "ViewProducts")]
         ProductsList ViewProducts();
     }
@@ -88,6 +93,14 @@ namespace Client
             var client = fact.CreateChannel();
 
             return client.AddProduct(product.Key, product.Size, product.Color, product.Price, product.Type, product.Amount);
+        }
+        public bool AddClientOrder(Client_order order)
+        {
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
+
+            return client.AddClientOrder(order.Order_ID,order.ID_order_product,order.Address,order.Order_status);
         }
         public void Index()
         {
