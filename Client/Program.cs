@@ -59,12 +59,28 @@ namespace Client
             RequestFormat = WebMessageFormat.Json)]
         bool AddProduct(Product product);
         void Index();
-        [WebGet]
-        List<Product> ViewProducts();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "AddOrderProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+           RequestFormat = WebMessageFormat.Json)]
+        bool AddOrderProduct(Order_products order);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "ViewProducts")]
+        ProductsList ViewProducts();
     }
 
     public class Api : IApi
     {
+        public bool AddOrderProduct(Order_products order)
+        {
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
+
+            return client.AddOrderProduct( order.Amount, order.Bar_code);
+        }
+
         public bool AddProduct(Product product)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
@@ -80,15 +96,17 @@ namespace Client
             var client = fact.CreateChannel();
         }
 
-        public List<Product> ViewProducts()
+        public ProductsList ViewProducts()
         {
             ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
+            
             var products = client.GetProducts(); //return null :/
 
             return client.GetProducts(); 
         }
+        
     }
 
 }
