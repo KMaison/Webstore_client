@@ -9,7 +9,6 @@ namespace Client
     public class Client_order
     {
         public string Order_ID { get; set; }
-        public string ID_order_product { get; set; }
         public string Address { get; set; }
         public string Order_status { get; set; }
     }

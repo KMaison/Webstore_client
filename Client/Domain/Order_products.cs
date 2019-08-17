@@ -11,5 +11,6 @@ namespace Client
         public string ID_order_products { get; set; }
         public string Amount { get; set; }
         public string Bar_code { get; set; }
+        public string ID_client_order { get; set; }
     }
 }

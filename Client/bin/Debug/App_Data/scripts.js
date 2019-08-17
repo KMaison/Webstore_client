@@ -21,8 +21,9 @@ function AddProduct() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-	var key, size, color, price, type, amount;
-	key = document.getElementById("key").value;
+	var key,name, size, color, price, type, amount;
+    key = document.getElementById("key").value;
+    name = document.getElementById("name").value;
 	size = document.getElementById("size").value;
 	color = document.getElementById("color").value;
 	price = document.getElementById("price").value;
@@ -31,7 +32,8 @@ function AddProduct() {
 
 	var params = {
 		"product": {
-			"Key": key,
+            "Key": key,
+            "Name":name,
 			"Size": size,
 			"Color": color,
 			"Price": price,
@@ -50,18 +52,20 @@ function AddOrderProduct() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-    var id, amount, barcode;
+    var id, id_order, amount, barcode;
+    id = document.getElementById("id").value;
     amount = document.getElementById("amount").value;
     barcode = document.getElementById("barcode").value;
-
+    id_order = document.getElementById("orderid").value;
     var params = {
         "order": {
+            "ID_order_products":id,
             "Amount": amount,
-            "Bar_code": barcode
+            "Bar_code": barcode,
+            "ID_client_order": id_order
+
         }
-
     };
-
     DoAjax("POST", "http://127.0.0.1/api/AddOrderProduct", fn, params);
 }
 function AddClientOrder() {
@@ -71,15 +75,13 @@ function AddClientOrder() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-    var order_id, id_order_products, address, order_status;
-    order_id = document.getElementById("orderid").value;
-    id_order_products = document.getElementById("idorderproduct").value;
+    var id, address, order_status;
+    id = document.getElementById("orderid").value;
     address = document.getElementById("address").value;
     order_status = document.getElementById("orderstatus").value;
     var params = {
         "order": {
-            "Order_ID": order_id,
-            "ID_order_product":id_order_products,
+            "Order_ID":id,
             "Address": address,
             "Order_status":order_status
         }
