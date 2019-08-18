@@ -13,6 +13,9 @@ function DoAjax(method, url, fn, params) {
 	request.onreadystatechange = handler(request);
 	request.send(JSON.stringify(params));
 }
+ function BarCodeGenerator() {
+    return  Math.random().toString(36).substr(2, 5);
+};
 
 function AddProduct() {
     var fn = function (request) {
@@ -22,7 +25,7 @@ function AddProduct() {
         e.innerHTML = request.responseText;
     };
 	var key,name, size, color, price, type, amount;
-    key = document.getElementById("key").value;
+    key = BarCodeGenerator();
     name = document.getElementById("name").value;
 	size = document.getElementById("size").value;
 	color = document.getElementById("color").value;
@@ -75,15 +78,14 @@ function AddClientOrder() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-    var id, address, order_status;
+    var id, address;
     id = document.getElementById("orderid").value;
     address = document.getElementById("address").value;
-    order_status = document.getElementById("orderstatus").value;
     var params = {
         "order": {
             "Order_ID":id,
             "Address": address,
-            "Order_status":order_status
+            "Order_status": "Processing" //becouse when client create order it is in prccessing mode
         }
     };
 
@@ -97,7 +99,7 @@ function AddClient() {
         e.innerHTML = request.responseText;
     };
     var pesel, firstname, surname, orderID;
-    pesel = document.getElementById("orderid").value;
+    pesel = document.getElementById("pesel").value;
     firstname = document.getElementById("firstname").value;
     surname = document.getElementById("surname").value;
     orderID = document.getElementById("orderid").value;
