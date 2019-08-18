@@ -55,17 +55,16 @@ function AddOrderProduct() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-    var id, id_order, amount, barcode;
+    var id, amount, barcode;
     id = document.getElementById("id").value;
     amount = document.getElementById("amount").value;
     barcode = document.getElementById("barcode").value;
-    id_order = document.getElementById("orderid").value;
     var params = {
         "order": {
             "ID_order_products":id,
             "Amount": amount,
             "Bar_code": barcode,
-            "ID_client_order": id_order
+            "ID_client_order": 0
 
         }
     };
@@ -78,12 +77,11 @@ function AddClientOrder() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-    var id, address;
-    id = document.getElementById("orderid").value;
+    var address;
     address = document.getElementById("address").value;
     var params = {
         "order": {
-            "Order_ID":id,
+            "Order_ID":0,
             "Address": address,
             "Order_status": "Processing" //becouse when client create order it is in prccessing mode
         }
@@ -102,13 +100,12 @@ function AddClient() {
     pesel = document.getElementById("pesel").value;
     firstname = document.getElementById("firstname").value;
     surname = document.getElementById("surname").value;
-    orderID = document.getElementById("orderid").value;
     var params = {
         "client": {
             "Pesel": pesel,
             "Firstname": firstname,
             "Surname": surname,
-            "Order_ID": orderID
+            "Order_ID": 0
         }
     };
 

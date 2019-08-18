@@ -10,13 +10,14 @@ namespace Client.Adapter
 {
     public class Api : IApi
     {
+        private static int order_id = 0;
         public bool AddOrderProduct(Order_products order)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
               new EndpointAddress("http://localhost:28732/Adapters/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            return client.AddOrderProduct(order.ID_order_products,order.Amount, order.Bar_code,order.ID_client_order);
+            return client.AddOrderProduct(order.ID_order_products,order.Amount, order.Bar_code,order_id.ToString());
         }
 
         public bool AddProduct(Product product)
@@ -32,8 +33,8 @@ namespace Client.Adapter
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Adapters/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-
-            return client.AddClientOrder( order.Order_ID,order.Address, order.Order_status);
+            order_id++;
+            return client.AddClientOrder( order_id.ToString(),order.Address, order.Order_status);
         }
         public void Index()
         {
@@ -59,7 +60,7 @@ namespace Client.Adapter
               new EndpointAddress("http://localhost:28732/Adapters/Service1.svc?singleWsdl"));
             var c = fact.CreateChannel();
 
-            return c.AddClient(client.Pesel, client.Firstname, client.Surname, client.Order_ID);
+            return c.AddClient(client.Pesel, client.Firstname, client.Surname, order_id.ToString());
         }
     }
 }
