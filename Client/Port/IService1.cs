@@ -9,12 +9,12 @@ namespace Client
     public interface IService1
     {
         [OperationContract]
-        bool AddProduct(string key, string size, string color, string price, string type,string amount);
+        bool AddProduct(string key,string name, string size, string color, string price, string type,string amount);
         [OperationContract]
         bool UpdateProduct(string key, string size, string color, string price, string type, string amount);
 
         [OperationContract]
-        bool AddOrderProduct(string amount, string bar_code);
+        bool AddOrderProduct(string id,string amount, string bar_code,string id_client_order);
         [OperationContract]
         bool UpdateOrderProduct(string id, string amount, string bar_code);
 
@@ -24,20 +24,10 @@ namespace Client
         bool UpdateClient(string pesel, string first_name, string surname, string order_id);
 
         [OperationContract]
-        bool AddClientOrder(string order_id, string id_order_product, string address, string order_status);
+        bool AddClientOrder(string orderid,string address, string order_status);
         [OperationContract]
         bool UpdateClientOrder(string order_id, string id_order_product, string address, string order_status);
         [OperationContract]
-        List<Product> GetProducts();
-    }
-
-    public class Product //TODO: klasy do osobnych plikow
-    {
-        public string Key { get; set; }
-        public string Size { get; set; }
-        public string Color { get; set; }
-        public string Price { get; set; }
-        public string Type { get; set; }
-        public string Amount { get; set; }
+        ProductsList GetProducts();
     }
 }

@@ -9,27 +9,36 @@
 </head>
 
 <body>
+Order product
     <form action="" method="post">
         <table>
-            <tr>
-                <td>A:</td>
-                <td><input type="text" id="a" name="a" /></td>
+		<tr>
+                <td>Id:</td>
+                <td><input type="text" id="id" name="id" /></td>
             </tr>
             <tr>
-                <td>B:</td>
-                <td><input type="text" id="b" name="b" /></td>
+                <td>Amount:</td>
+                <td><input type="text" id="amount" name="amount" /></td>
             </tr>
+			<tr>
+                <td>Bar code:</td>
+                <td><input type="text" id="barcode" name="barcode" /></td>
+            </tr>
+			
         </table>
         <p>
-            <button type="button" onclick="HandleClick()">Dodaj</button> <br />
+            <button type="button" onclick="AddOrderProduct()">Order product</button> <br />
         </p>
     </form>
-    <p>
+   <p>
         Wynik:<span id="wynik"></span>
     </p>
     <hr />
     <p> Odpowied&#378;: </p>
     <pre id="resp"></pre>
+	<br/>
+<a href="./add_order_product.html">Order next product</a><br/>
+<a href="./add_client.html">Sum up</a><br/>
 </body>
 
 </html>
