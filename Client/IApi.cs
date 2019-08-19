@@ -33,7 +33,7 @@ namespace Client.Port
         bool AddClient(Client client);
 
         [OperationContract]
-        [WebGet(UriTemplate = "ViewProducts")]
-        ProductsList ViewProducts();
+        [WebGet(UriTemplate = "ViewProducts", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
+        String[] ViewProducts();
     }
 }
