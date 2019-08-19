@@ -66,8 +66,8 @@ namespace Client
         bool AddOrderProduct(Order_products order);
 
         [OperationContract]
-        [WebGet(UriTemplate = "ViewProducts")]
-        ProductsList ViewProducts();
+        [WebGet(UriTemplate = "ViewProducts", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
+        String[] ViewProducts();
     }
 
     public class Api : IApi
@@ -78,7 +78,7 @@ namespace Client
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            return client.AddOrderProduct( order.Amount, order.Bar_code);
+            return client.AddOrderProduct(order.Amount, order.Bar_code);
         }
 
         public bool AddProduct(Product product)
@@ -96,17 +96,17 @@ namespace Client
             var client = fact.CreateChannel();
         }
 
-        public ProductsList ViewProducts()
+        public String[] ViewProducts()
         {
             ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-            
-            var products = client.GetProducts(); //return null :/
 
-            return client.GetProducts(); 
+            String[] productList = client.SetProductList();
+                                          
+            return productList;
         }
-        
+
     }
 
 }
