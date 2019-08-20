@@ -10,6 +10,7 @@
 
 <body>
     <form action="" method="post">
+	MANY
         <table>
             <tr>
                 <td>PESEL:</td>
@@ -30,10 +31,16 @@
 			
         </table>
         <p>
-            <button type="button" onclick="Submit()">Submit</button> <br />
+            <button type="button" onclick="AddClientOrder();AddClient()">Submit</button> <br />
         </p>
     </form>
-   
+    <p>
+        Wynik:<span id="wynik"></span>
+    </p>
+    <hr />
+    <p> Odpowied&#378;: </p>
+    <pre id="resp"></pre>
+	<a href="./add_client.html">Submit your order</a><br/>
 </body>
 
 </html>
