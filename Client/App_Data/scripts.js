@@ -1,20 +1,20 @@
 function DoAjaxPOST(method, url, fn, params) {
-	var request = new XMLHttpRequest();
-	request.open(method, url, true);
-	request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    var request = new XMLHttpRequest();
+    request.open(method, url, true);
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-	var handler = function (request) {
-		return function () {
-			if (request.readyState != 4) return;
-			if (request.status == 200) fn(request);
-			else alert(request.readyState + " " + request.status + " " + request.statusText);
-		};
-	}
-	request.onreadystatechange = handler(request);
-	request.send(JSON.stringify(params));
+    var handler = function (request) {
+        return function () {
+            if (request.readyState != 4) return;
+            if (request.status == 200) fn(request);
+            else alert(request.readyState + " " + request.status + " " + request.statusText);
+        };
+    }
+    request.onreadystatechange = handler(request);
+    request.send(JSON.stringify(params));
 }
- function BarCodeGenerator() {
-    return  Math.random().toString(36).substr(2, 5);
+function BarCodeGenerator() {
+    return Math.random().toString(36).substr(2, 5);
 };
 function DoAjaxGET(method, url, fn) {
     var request = new XMLHttpRequest();
@@ -38,29 +38,29 @@ function AddProduct() {
         e = document.getElementById("resp");
         e.innerHTML = request.responseText;
     };
-	var key,name, size, color, price, type, amount;
+    var key, name, size, color, price, type, amount;
     key = BarCodeGenerator();
     name = document.getElementById("name").value;
-	size = document.getElementById("size").value;
-	color = document.getElementById("color").value;
-	price = document.getElementById("price").value;
-	type = document.getElementById("type").value;
-	amount = document.getElementById("amount").value;
+    size = document.getElementById("size").value;
+    color = document.getElementById("color").value;
+    price = document.getElementById("price").value;
+    type = document.getElementById("type").value;
+    amount = document.getElementById("amount").value;
 
-	var params = {
-		"product": {
+    var params = {
+        "product": {
             "Key": key,
-            "Name":name,
-			"Size": size,
-			"Color": color,
-			"Price": price,
-			"Type": type,
-			"Amount": amount
-		}
+            "Name": name,
+            "Size": size,
+            "Color": color,
+            "Price": price,
+            "Type": type,
+            "Amount": amount
+        }
 
-	};
+    };
 
-	DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
+    DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
 }
 function AddOrderProduct() {
     var fn = function (request) {
@@ -75,7 +75,7 @@ function AddOrderProduct() {
     barcode = document.getElementById("barcode").value;
     var params = {
         "order": {
-            "ID_order_products":id,
+            "ID_order_products": id,
             "Amount": amount,
             "Bar_code": barcode,
             "ID_client_order": 0
@@ -95,7 +95,7 @@ function AddClientOrder() {
     address = document.getElementById("address").value;
     var params = {
         "order": {
-            "Order_ID":0,
+            "Order_ID": 0,
             "Address": address,
             "Order_status": "Processing" //becouse when client create order it is in prccessing mode
         }
@@ -125,17 +125,17 @@ function AddClient() {
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddClient", fn, params);
 }
+
 function FillTable(e) {
 
     var myTableDiv = document.getElementById("products")
     var table = document.createElement('TABLE')
     var tableBody = document.createElement('TBODY')
-    var buy_products, count;
     table.border = '1'
     table.appendChild(tableBody);
 
     var tr = document.createElement('TR');
-    var array = ["Name","ID", "Size", "Color", "Price", "Type", "Available quantity", "Buy"];
+    var array = ["Name", "ID", "Size", "Color", "Price", "Type", "Available quantity", "Buy"];
     tableBody.appendChild(tr);
     for (i = 0; i < array.length; i++) {
         var th = document.createElement('TH')
@@ -144,9 +144,13 @@ function FillTable(e) {
         tr.appendChild(th);
 
     }
+    var count, buy_products;
+    var counter = (e.length / 7);
+    buy_products = new Array(counter);
+    count = new Array(counter);
     var k = 0;
     var key = 0;
-    for (i = 0; i < e.length / 7; i++) {
+    for (i = 0; i < counter; i++) {
         var tr = document.createElement('TR');
         for (j = 0; j < array.length - 1; j++) {
             if (j == 1) {
@@ -157,20 +161,50 @@ function FillTable(e) {
             tr.appendChild(td)
             k++;
         }
-        count = document.createElement('Input');
-        count.id = "input_Amount_products";
-        count.tagName = e[key];
-        tr.appendChild(count)
-        buy_products = document.createElement('Button');
-        buy_product.url = "index.html";
-        buy_products.id = "button_Amount_products";
-        buy_products.tagName = e[key];
-        buy_products.textContent = "Add to card";
-        tr.appendChild(buy_products)
+        count[i] = document.createElement('Input');
+        count[i].id = "input_Amount_products_" + e[key];
+        count[i].tagName = e[key];
+        count[i].value = "0";
+        count[i].type = "number";
+        count[i].max = e[key + 5];
+        count[i].min = 1;
+        buy_products[i] = document.createElement('Button');
+        buy_products[i].id = "button_Amount_products_" + e[key];
+        buy_products[i].tagName = e[key];
+        buy_products[i].textContent = "Add to card";
+
+        tr.appendChild(count[i]);
+        tr.appendChild(buy_products[i]);
         tableBody.appendChild(tr);
     }
-    myTableDiv.appendChild(table)
+    myTableDiv.appendChild(table);
+
+    for (let j = 0; j < buy_products.length; j++) {
+        let button = buy_products[j];
+        button.addEventListener('click', function () {
+            if (count[j].value <= e[6 + j * 7]) 
+                add_to_card(e[1 + j * 7], count[j].value);
+            
+            else
+                alert("We don't have enough products.")
+        });
+    }
 }
+
+function add_to_card(id, amount_input) {
+    var products_list = [];
+    products_list = JSON.parse(localStorage.getItem("card"));
+    if (products_list == null) products_list = [];
+//for item in product_list + jesli juz jest klucz = id nie mozna znowu dodac do koszyka
+    const product = {
+        Key: id,
+        Amount: amount_input
+    }
+    products_list.push((product))
+    localStorage.setItem("card", JSON.stringify(products_list))
+
+}
+
 function ViewProducts() {
     var fn = function (request) {
 
@@ -178,7 +212,7 @@ function ViewProducts() {
 
         e = e.toString();
 
-        var replaced = e.replace('[', ''); 
+        var replaced = e.replace('[', '');
         replaced = replaced.replace(/","/g, ';');
         replaced = replaced.replace(/"/, '');
         replaced = replaced.replace(/"]/, '');
