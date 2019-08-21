@@ -32,6 +32,6 @@ namespace Client
         bool UpdateClientOrder(string order_id, string id_order_product, string address, string order_status);
 
         [OperationContract]
-        String[] SetProductList();
+        String[] GetProductList();
     }
 }

@@ -133,9 +133,9 @@ function FillTable(e) {
     var tableBody = document.createElement('TBODY')
     table.border = '1'
     table.appendChild(tableBody);
-
+//column
     var tr = document.createElement('TR');
-    var array = ["Name", "ID", "Size", "Color", "Price", "Type", "Available quantity", "Buy"];
+    var array = ["Name", "ID", "Size", "Color", "Price", "Type", "Available quantity","Buy"];
     tableBody.appendChild(tr);
     for (i = 0; i < array.length; i++) {
         var th = document.createElement('TH')
@@ -145,17 +145,23 @@ function FillTable(e) {
 
     }
     var count, buy_products;
-    var counter = (e.length / 7);
+    var counter = (e.length / 8); //ile produktow
     buy_products = new Array(counter);
     count = new Array(counter);
     var k = 0;
     var key = 0;
+    //rows
     for (i = 0; i < counter; i++) {
         var tr = document.createElement('TR');
-        for (j = 0; j < array.length - 1; j++) {
+        for (j = 0; j < array.length; j++) {
             if (j == 1) {
                 key = k;
             }
+            if (j == array.length - 2)
+                {            
+                    k++;                            
+                    continue;
+                }
             var td = document.createElement('TD')
             td.appendChild(document.createTextNode(e[k]));
             tr.appendChild(td)
@@ -185,9 +191,9 @@ function FillTable(e) {
             if (parseInt(count[j].value) < 1) {
                 alert("<1")
             }
-            else if (parseInt(count[j].value) <= parseInt(e[6 + j * 7])) {
+            else if (parseInt(count[j].value) <= parseInt(e[7 + j * 8])) {
 
-                add_to_card(e[1 + j * 7], count[j].value);
+                add_to_card(e[1 + j * 8], count[j].value);
             }
             else {
                 alert("We don't have enough products.")

@@ -55,7 +55,7 @@ namespace Client.Adapter
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            String[] productList = client.SetProductList();
+            String[] productList = client.GetProductList();
 
             return productList;
         }
