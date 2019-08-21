@@ -62,62 +62,64 @@ function AddProduct() {
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
 }
-function AddOrderProduct() {
+function AddOrderProduct(barcode, id, amount) {
     var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+
     };
-    var id, amount, barcode;
-    id = document.getElementById("id").value;
-    amount = document.getElementById("amount").value;
-    barcode = document.getElementById("barcode").value;
     var params = {
         "order": {
-            "ID_order_products": id,
             "Amount": amount,
             "Bar_code": barcode,
-            "ID_client_order": 0
+            "ID_client_order": id
 
         }
     };
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddOrderProduct", fn, params);
 }
+
+function AddOrderProducts(id) {
+    var products_list = JSON.parse(localStorage.getItem("card"));
+    var amount, barcode;
+    for (i = 0; i < products_list.length; i++) {
+        amount = products_list[i].Amount;
+        barcode = products_list[i].Key;
+
+        AddOrderProduct(barcode, id, amount);
+    }
+}
+
+
+
 function AddClientOrder() {
     var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
+        var id = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        AddClient(id);
+        AddOrderProducts(id)
     };
     var address;
     address = document.getElementById("address").value;
     var params = {
         "order": {
-            "Order_ID": 0,
-            "Address": address,
-            "Order_status": "Processing" //becouse when client create order it is in prccessing mode
+            "Address": address
         }
     };
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
 }
-function AddClient() {
+function AddClient(id) {
     var fn = function (request) {
         var e = document.getElementById("wynik");
         e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
     };
-    var pesel, firstname, surname, orderID;
+    var firstname, surname;
     firstname = document.getElementById("firstname").value;
     surname = document.getElementById("surname").value;
     var params = {
         "client": {
             "Firstname": firstname,
             "Surname": surname,
-            "Order_ID": 0
+            "Order_ID": id
         }
     };
 
@@ -192,7 +194,7 @@ function FillTable(e) {
             }
 
         });
-        };
+    };
     viewCard();
 }
 function parseStorage() {
@@ -244,8 +246,6 @@ function add_to_card(id, amount_input) {
         Amount: amount_input
     }
 
-
-    var xjkdk = product.Key
     products_list.push((product))
     localStorage.setItem("card", JSON.stringify(products_list))
     viewCard()

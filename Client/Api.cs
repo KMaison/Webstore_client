@@ -10,14 +10,13 @@ namespace Client.Adapter
 {
     public class Api : IApi
     {
-        private static int order_id = 0;
         public bool AddOrderProduct(Order_products order)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            return client.AddOrderProduct(order.ID_order_products,order.Amount, order.Bar_code,order_id.ToString());
+            return client.AddOrderProduct(order.Amount, order.Bar_code,order.ID_client_order);
         }
 
         public bool AddProduct(Product product)
@@ -28,22 +27,19 @@ namespace Client.Adapter
 
             return client.AddProduct(product.Key,product.Name, product.Size, product.Color, product.Price, product.Type, product.Amount);
         }
-        public bool AddClientOrder(Client_order order)
+        public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-            order_id++;
-            return client.AddClientOrder( order_id.ToString(),order.Address, order.Order_status);
+            return client.CreateClientOrder(order.Address);
         }
         public void Index()
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-        }
-
-        
+        }        
 
         public bool AddClient(Client client)
         {
@@ -51,7 +47,7 @@ namespace Client.Adapter
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var c = fact.CreateChannel();
 
-            return c.AddClient(client.Pesel, client.Firstname, client.Surname, order_id.ToString());
+            return c.AddClient(client.Firstname, client.Surname, client.Order_ID);
         }
         public String[] ViewProducts()
         {

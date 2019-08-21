@@ -25,7 +25,7 @@ namespace Client.Port
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddClientOrder", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
-        bool AddClientOrder(Client_order order);
+        int AddClientOrder(Client_order order);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddClient", BodyStyle = WebMessageBodyStyle.WrappedRequest,

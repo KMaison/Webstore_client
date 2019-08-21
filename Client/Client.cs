@@ -8,7 +8,6 @@ namespace Client
 {
    public class Client
     {
-        public string Pesel { get; set; }
         public string Firstname { get; set; }
         public string Surname { get; set; }
         public string Order_ID { get; set; }
