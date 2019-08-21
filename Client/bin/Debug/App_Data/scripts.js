@@ -182,30 +182,81 @@ function FillTable(e) {
     for (let j = 0; j < buy_products.length; j++) {
         let button = buy_products[j];
         button.addEventListener('click', function () {
-            if (count[j].value <= e[6 + j * 7]) {
-            e[6 + j * 7] -= count[j].value;
+            if (parseInt(count[j].value) < 1) {
+                alert("<1")
+            }
+            else if (parseInt(count[j].value) <= parseInt(e[6 + j * 7])) {
+
                 add_to_card(e[1 + j * 7], count[j].value);
             }
-            else
+            else {
                 alert("We don't have enough products.")
+            }
         });
     }
+
+    var viewCardButton = document.createElement('Button');
+    viewCardButton.textContent = "My card";
+    myTableDiv.appendChild(viewCardButton);
+    viewCardButton.addEventListener('click', function () { //button do wykorzystania w przyszlosci
+        viewCard()
+    });
+
+}
+function parseStorage() {
+    var products_list = JSON.parse(localStorage.getItem("card"));
+    products_list = JSON.stringify(products_list)
+    products_list = products_list.split('}');
+    str = ""
+    for (i = 0; i < products_list.length; i++) {
+        str += "<br>"
+        str += products_list[i];
+    }
+    var replaced = str.replace('[', '');
+    replaced = replaced.replace(/","/g, ' ');
+    replaced = replaced.replace(/"/g, '');
+    replaced = replaced.replace(/]/g, '');
+    replaced = replaced.replace(/,{/g, '');
+    replaced = replaced.replace(/{/g, '');
+    replaced = replaced.replace(/"/g, '');
+    return replaced
+}
+function viewCard() {
+    var card_area = document.getElementById("card")
+    if (JSON.parse(localStorage.getItem("card")) == null)
+    {
+        card_area.innerHTML = "Your card is empty."
+        return
+    }
+    card_area.innerHTML = ""
+    card_area.innerHTML = parseStorage();
 }
 
 function add_to_card(id, amount_input) {
     var products_list = [];
     products_list = JSON.parse(localStorage.getItem("card"));
     if (products_list == null) products_list = [];
-    let x = localStorage.getItem(localStorage.key(id));
-    if (x != null)
-        id++;
+    var str = parseStorage();
+
+    for (i = 0; i < products_list.length; i++) {
+         var x= products_list[i].Key
+        if (products_list[i].Key == id) {
+            products_list[i].Amount = amount_input
+            localStorage.setItem("card", JSON.stringify(products_list))
+            viewCard()
+            return
+        }
+    }
     const product = {
         Key: id,
         Amount: amount_input
     }
+
+
+    var xjkdk = product.Key
     products_list.push((product))
     localStorage.setItem("card", JSON.stringify(products_list))
-
+    viewCard()
 }
 
 function ViewProducts() {
