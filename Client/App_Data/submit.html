@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+
+<head>
+    <title>WCF3 REST 165181 </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="./scripts.js"></script>
+</head>
+
+<body>
+    <form action="" method="post">
+	MANY
+        <table>
+            <tr>
+                <td>PESEL:</td>
+                <td><input type="text" id="pesel" name="pesel" /></td>
+            </tr>
+            <tr>
+                <td>First name:</td>
+                <td><input type="text" id="firstname" name="firstname" /></td>
+            </tr>
+			<tr>
+                <td>Surname:</td>
+                <td><input type="text" id="surname" name="surname" /></td>
+            </tr>
+			<tr>
+                <td>Address:</td>
+                <td><input type="text" id="address" name="address" /></td>
+            </tr>
+			
+        </table>
+        <p>
+            <button type="button" onclick="AddClientOrder();AddClient()">Submit</button> <br />
+        </p>
+    </form>
+    <p>
+        Wynik:<span id="wynik"></span>
+    </p>
+    <hr />
+    <p> Odpowied&#378;: </p>
+    <pre id="resp"></pre>
+	<a href="./add_client.html">Submit your order</a><br/>
+</body>
+
+</html>
