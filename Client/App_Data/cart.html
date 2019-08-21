@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<style>
+    .card {
+        width: fit-content;
+        height: fit-content;
+        border: solid 2px rgb(148, 148, 148);
+        padding: 5px;
+        text-align: center;
+
+    }
+</style>
 
 <head>
-    <title>WCF3 REST 165181 </title>
+    <title>Story</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script type="text/javascript" src="./scripts.js"></script>
 </head>
 
 <body>
-    <p>
-        <button type="button" onclick="location.href='submit.html';">Submit</button> <br /><br />
-    </p><hr />
-    <pre id="resp"></pre>
-    <div id="products"></div>
-	Koszyk
+    <div class="card">
+        <div id="card"></div>
+        <script>viewCard()</script>
+
+        <p>
+            <button type="button" onclick="location.href='submit.html';"
+                style="display: inline-block; display: inline-block;">Buy</button> <br />
+        </p>
+    </div>
+
+
 </body>
 
 </html>

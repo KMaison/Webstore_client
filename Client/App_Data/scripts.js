@@ -111,12 +111,10 @@ function AddClient() {
         e.innerHTML = request.responseText;
     };
     var pesel, firstname, surname, orderID;
-    pesel = document.getElementById("pesel").value;
     firstname = document.getElementById("firstname").value;
     surname = document.getElementById("surname").value;
     var params = {
         "client": {
-            "Pesel": pesel,
             "Firstname": firstname,
             "Surname": surname,
             "Order_ID": 0
@@ -192,16 +190,10 @@ function FillTable(e) {
             else {
                 alert("We don't have enough products.")
             }
+
         });
-    }
-
-    var viewCardButton = document.createElement('Button');
-    viewCardButton.textContent = "My card";
-    myTableDiv.appendChild(viewCardButton);
-    viewCardButton.addEventListener('click', function () { //button do wykorzystania w przyszlosci
-        viewCard()
-    });
-
+        };
+    viewCard();
 }
 function parseStorage() {
     var products_list = JSON.parse(localStorage.getItem("card"));
@@ -223,13 +215,13 @@ function parseStorage() {
 }
 function viewCard() {
     var card_area = document.getElementById("card")
-    if (JSON.parse(localStorage.getItem("card")) == null)
-    {
+    if (JSON.parse(localStorage.getItem("card")) == null) {
         card_area.innerHTML = "Your card is empty."
         return
     }
-    card_area.innerHTML = ""
-    card_area.innerHTML = parseStorage();
+    card_area.innerHTML = "<strong>Card:</strong> <br>"
+    card_area.innerHTML += parseStorage() + "<br>";
+
 }
 
 function add_to_card(id, amount_input) {
@@ -239,7 +231,7 @@ function add_to_card(id, amount_input) {
     var str = parseStorage();
 
     for (i = 0; i < products_list.length; i++) {
-         var x= products_list[i].Key
+        var x = products_list[i].Key
         if (products_list[i].Key == id) {
             products_list[i].Amount = amount_input
             localStorage.setItem("card", JSON.stringify(products_list))
