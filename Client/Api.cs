@@ -59,5 +59,14 @@ namespace Client.Adapter
 
             return productList;
         }
+
+        public bool ifProductAmountEnough(string id, string amount)
+        {
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+             new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var c = fact.CreateChannel();
+
+            return c.ifProductAmountEnough(id,amount);
+        }
     }
 }

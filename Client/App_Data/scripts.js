@@ -62,6 +62,18 @@ function AddProduct() {
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
 }
+function ifProductAmountEnough(id,amount) {
+    var fn = function (request) {
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+
+    };
+    var params = {
+            "id": id,
+            "amount": amount
+    };
+DoAjaxPOST("POST", "http://127.0.0.1/api/ifProductAmountEnough", fn, params);
+}
+
 function AddOrderProduct(barcode, id, amount) {
     var fn = function (request) {
         var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
@@ -204,7 +216,12 @@ function parseStorage() {
     str = ""
     for (i = 0; i < products_list.length; i++) {
         str += "<br>"
+        if (ifProductAmountEnough("5462","3")){
+        //wydobadz id 
         str += products_list[i];
+          }
+        //else {delete from storage }
+        
     }
     var replaced = str.replace('[', '');
     replaced = replaced.replace(/","/g, ' ');

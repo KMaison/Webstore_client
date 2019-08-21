@@ -32,6 +32,9 @@ namespace Client
         bool UpdateClientOrder(string order_id, string id_order_product, string address, string order_status);
 
         [OperationContract]
+        bool ifProductAmountEnough(string id, string amount);
+
+        [OperationContract]
         String[] SetProductList();
     }
 }
