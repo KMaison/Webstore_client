@@ -1,32 +1,21 @@
-function DoAjaxPOST(method, url, fn, params) {
-    var request =  new XMLHttpRequest();
-    request.open(method, url, true);
-    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+function DoAjaxPOST(method, url, params) {
+    var request = new XMLHttpRequest();
 
-    var handler =  function (request) {
-        return function () {
-            if (request.readyState != 4) return;
-            if (request.status == 200)  fn(request);
-            else alert(request.readyState + " " + request.status + " " + request.statusText);
-        };
-    }
-    request.onreadystatechange =  handler(request);
-    request.send(JSON.stringify(params));
-    console.log('res'+request.responseText);
+    return new Promise(function (resolve, reject) {
+        request.open(method, url, true);
+        request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        request.onreadystatechange = function (response) {
+            request.send(JSON.stringify(params));
+            if (response.status >= 200 || response.status < 400) {
+                resolve(response)
+            } else {
+                reject(response)
+            }
+            
+        }
+    });
 }
-function BarCodeGenerator() {
-    return Math.random().toString(36).substr(2, 5);
-};
 
-function process(callback,response) {
-    var response;
-    if (typeof callback !== 'function') {
-        callback = false;
-    }
-    if (callback) {
-        response = callback();
-    }
-};
 
 function DoAjaxGET(method, url, fn) {
     var request = new XMLHttpRequest();
@@ -46,12 +35,7 @@ function DoAjaxGET(method, url, fn) {
 }
 
 function AddProduct() {
-    var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
-    };
+
     var key, name, size, color, price, type, amount;
     key = BarCodeGenerator();
     name = document.getElementById("name").value;
@@ -74,25 +58,20 @@ function AddProduct() {
 
     };
 
-    DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
+    DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", params).then(function (response) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = response.responseXML.childNodes[0].childNodes[0].nodeValue;
+        e = document.getElementById("resp");
+        e.innerHTML = response.responseText;
+    })
+    .catch (function(response) {
+        console.log('error response', response)
+    })
 }
- function ifProductAmountEnough(id,amount) {
-    var fn =  function (request) {
-        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        return x;
-    };
-    var params = {
-            "id": id,
-            "amount": amount
-    };
- DoAjaxPOST("POST", "http://127.0.0.1/api/ifProductAmountEnough", fn,params);
-}
+
 
 function AddOrderProduct(barcode, id, amount) {
-    var fn = function (request) {
-        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
 
-    };
     var params = {
         "order": {
             "Amount": amount,
@@ -101,7 +80,15 @@ function AddOrderProduct(barcode, id, amount) {
 
         }
     };
-    DoAjaxPOST("POST", "http://127.0.0.1/api/AddOrderProduct", fn, params);
+    DoAjaxPOST("POST", "http://127.0.0.1/api/AddOrderProduct", params).then(function (response) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = response.responseXML.childNodes[0].childNodes[0].nodeValue;
+        e = document.getElementById("resp");
+        e.innerHTML = response.responseText;
+    })
+        .catch(function (response) {
+            console.log('error response', response)
+        })
 }
 
 function AddOrderProducts(id) {
@@ -116,11 +103,6 @@ function AddOrderProducts(id) {
 }
 
 function AddClientOrder() {
-    var fn = function (request) {
-        var id = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        AddClient(id);
-        AddOrderProducts(id)
-    };
     var address;
     address = document.getElementById("address").value;
     var params = {
@@ -129,13 +111,16 @@ function AddClientOrder() {
         }
     };
 
-    DoAjaxPOST("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
+    DoAjaxPOST("POST", "http://127.0.0.1/api/AddClientOrder", params).then(function (response) {
+        var id = response.responseXML.childNodes[0].childNodes[0].nodeValue;
+        AddClient(id);
+        AddOrderProducts(id);
+    })
+        .catch(function (response) {
+            console.log('error response', response)
+        })
 }
 function AddClient(id) {
-    var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-    };
     var firstname, surname;
     firstname = document.getElementById("firstname").value;
     surname = document.getElementById("surname").value;
@@ -147,7 +132,13 @@ function AddClient(id) {
         }
     };
 
-    DoAjaxPOST("POST", "http://127.0.0.1/api/AddClient", fn, params);
+    DoAjaxPOST("POST", "http://127.0.0.1/api/AddClient", params).then(function (response) {
+        var e = document.getElementById("wynik");
+        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+    })
+        .catch(function (response) {
+            console.log('error response', response)
+        })
 }
 
 function FillTable(e) {
@@ -222,65 +213,77 @@ function FillTable(e) {
     viewCard();
 }
 
-function parseStorage() {
-    var products_list = JSON.parse(localStorage.getItem("card"));
-    products_list = JSON.stringify(products_list)
-    products_list = products_list.split('}');
-    str = ""
-    for (i = 0; i < products_list.length; i++) {
-        str += "<br>"
-        str += products_list[i];
-    }
-    var replaced = str.replace('[', '');
-    replaced = replaced.replace(/","/g, ' ');
-    replaced = replaced.replace(/"/g, '');
-    replaced = replaced.replace(/]/g, '');
-    replaced = replaced.replace(/,{/g, '');
-    replaced = replaced.replace(/{/g, '');
-    replaced = replaced.replace(/"/g, '');
-    return replaced
-}
 //function parseStorage() {
 //    var products_list = JSON.parse(localStorage.getItem("card"));
 //    products_list = JSON.stringify(products_list)
 //    products_list = products_list.split('}');
-//    var str = ""
-//    for (i = 0; i < products_list.length-1; i++) {
-        
-//        var par = products_list[i];
-
-//        par = par.replace('[', '');
-//        par = par.replace(/","/g, ' ');
-//        par = par.replace(/"/g, '');
-//        par = par.replace(/]/g, '');
-//        par = par.replace(/,{/g, '');
-//        par = par.replace(/{/g, '');
-//        par = par.replace(/"/g, '');
-
-//        console.log(par);
-//        var parts = par.split(' ', 2);
-//        var key = parts[0].split(':', 2)[1];
-
-//        var amount = parts[1].split(':', 2)[1];
-//        var ifa = ifProductAmountEnough(key.toString(), amount.toString());
-//        if (ifa) {
-//            str += "<br>";
-//            str += par;
-//        }
-//        //else {
-//        //    var products = [];
-//        //    products = JSON.parse(localStorage.getItem("card"));
-//        //    //1) Usuñ z tej listy produkt
-//        //    for (int j = i; j < products.length - 2, j++)
-//        //        products[i] = products[i + 1];
-//        //    //2)nadpisz ca³y storage
-//        //    localStorage.setItem("card", JSON.stringify(products))
-
-//        //}
-        
+//    str = ""
+//    for (i = 0; i < products_list.length; i++) {
+//        str += "<br>"
+//        str += products_list[i];
 //    }
-//    return str;
+//    var replaced = str.replace('[', '');
+//    replaced = replaced.replace(/","/g, ' ');
+//    replaced = replaced.replace(/"/g, '');
+//    replaced = replaced.replace(/]/g, '');
+//    replaced = replaced.replace(/,{/g, '');
+//    replaced = replaced.replace(/{/g, '');
+//    replaced = replaced.replace(/"/g, '');
+//    return replaced
 //}
+function ifProductAmountEnough(id, amount) {
+    var params = {
+        "id": id,
+        "amount": amount
+    };
+    DoAjaxPOST("POST", "http://127.0.0.1/api/ifProductAmountEnough", params).then(function (response) {
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return x;
+    })
+        .catch(function (response) {
+            console.log('error response', response)
+        })
+}
+function parseStorage() {
+    var products_list = JSON.parse(localStorage.getItem("card"));
+    products_list = JSON.stringify(products_list)
+    products_list = products_list.split('}');
+    var str = ""
+    for (i = 0; i < products_list.length-1; i++) {
+        
+        var par = products_list[i];
+
+        par = par.replace('[', '');
+        par = par.replace(/","/g, ' ');
+        par = par.replace(/"/g, '');
+        par = par.replace(/]/g, '');
+        par = par.replace(/,{/g, '');
+        par = par.replace(/{/g, '');
+        par = par.replace(/"/g, '');
+
+        console.log(par);
+        var parts = par.split(' ', 2);
+        var key = parts[0].split(':', 2)[1];
+
+        var amount = parts[1].split(':', 2)[1];
+        var ifa = ifProductAmountEnough(key.toString(), amount.toString());
+        if (ifa) {
+            str += "<br>";
+            str += par;
+        }
+        //else {
+        //    var products = [];
+        //    products = JSON.parse(localStorage.getItem("card"));
+        //    //1) Usuñ z tej listy produkt
+        //    for (int j = i; j < products.length - 2, j++)
+        //        products[i] = products[i + 1];
+        //    //2)nadpisz ca³y storage
+        //    localStorage.setItem("card", JSON.stringify(products))
+        //}
+        
+    }
+    return str;
+}
 
 function viewCard() {
     var card_area = document.getElementById("card")
