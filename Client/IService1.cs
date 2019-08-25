@@ -36,5 +36,8 @@ namespace Client
 
         [OperationContract]
         String[] SetProductList();
+
+        [OperationContract]
+        string getProductPrice(string id);
     }
 }

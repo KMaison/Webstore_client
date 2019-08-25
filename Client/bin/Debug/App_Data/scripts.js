@@ -1,25 +1,27 @@
 function viewCard() {
-    var sum=0;
+    document.getElementById("price").innerHTML=0;
     if (JSON.parse(localStorage.getItem("card")) == null) {
         document.getElementById("products").innerHTML = "Your card is empty."
         return
     }
     document.getElementById("name").innerHTML = "<strong>Card:</strong>"
     parseStorage();
-    var prices = ["10.99", "9.99", "19,99"];
-    for ( i = 0; i < prices.length; i++)
-    {
-        sum += parseFloat(prices[i]);
-    }
+    getSumOfPrices();
+    //var prices = ["10.99", "9.99", "19,99"];
+    //for ( i = 0; i < prices.length; i++)
+    //{
+    //    sum += parseFloat(prices[i]);
+    //}
 	
-    document.getElementById("price").innerHTML += "Sum: " + sum.toFixed(2);
+    //document.getElementById("price").innerHTML += "Sum: " + sum.toFixed(2);
 }
 
  function parseStorage() {
-    var products_list = JSON.parse(localStorage.getItem("card"));
+     var products_list = JSON.parse(localStorage.getItem("card"));
+     var sum = document.getElementById("price");
     products_list = JSON.stringify(products_list)
     products_list = products_list.split('}');
-    for (i = 0; i < products_list.length-1; i++) {
+    for (i = 0; i < products_list.length; i++) {
         
         var par = products_list[i];
 
@@ -36,7 +38,9 @@ function viewCard() {
         var key = parts[0].split(':', 2)[1];
 
         var amount = parts[1].split(':', 2)[1];
-        addIfProductAmountEnough(key.toString(), amount.toString(),par);
+        addIfProductAmountEnough(key.toString(), amount.toString(), par);
+        getSumOfPrices(key.toString(),amount.toString());
+        (parseFloat(sum.innerHTML)).toFixed(2);
         //else {
         //    var products = [];
         //    products = JSON.parse(localStorage.getItem("card"));
@@ -58,6 +62,7 @@ function viewCard() {
 			str = "<br>";
 			str += par;
             products.innerHTML += str;
+            
         }
     };
     var params = {
@@ -68,6 +73,23 @@ function viewCard() {
      return temp;
 }
 
+function getSumOfPrices(id,amount) {
+    var fn = function (request) {
+        var s = document.getElementById("price");
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        var sum;
+        if (x) {
+            sum = parseFloat(s.innerHTML);
+            sum += (parseFloat(x) * parseInt(amount));
+            s.innerHTML = sum;
+        }
+    };
+    var params = {
+        "id": id
+    };
+    var temp = DoAjaxPOST("POST", "http://127.0.0.1/api/getProductPrice", fn, params);
+    return temp;
+}
 function DoAjaxPOST(method, url, fn, params) {
     var request =  new XMLHttpRequest();
     request.open(method, url, true);

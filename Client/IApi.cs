@@ -38,6 +38,11 @@ namespace Client.Port
         bool ifProductAmountEnough(string id, string amount);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "getProductPrice", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+           RequestFormat = WebMessageFormat.Json)]
+        float getProductPrice(string id);
+
+        [OperationContract]
         [WebGet(UriTemplate = "ViewProducts", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
         String[] ViewProducts();
     }

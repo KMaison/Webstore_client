@@ -68,5 +68,15 @@ namespace Client.Adapter
 
             return c.ifProductAmountEnough(id,amount);
         }
-    }
-}
+        public float getProductPrice(string id)
+        {
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var c = fact.CreateChannel();
+            var value = c.getProductPrice(id);
+            if (value != null)
+                return float.Parse(c.getProductPrice(id));
+            else
+                return 0;
+        }
+    }}
