@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ClientApp.Domain
+{
+    public class Client_order
+    {
+        public string Address { get; set; }
+    }
+}
