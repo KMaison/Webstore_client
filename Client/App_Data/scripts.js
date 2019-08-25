@@ -7,13 +7,6 @@ function viewCard() {
     document.getElementById("name").innerHTML = "<strong>Card:</strong>"
     parseStorage();
     getSumOfPrices();
-    //var prices = ["10.99", "9.99", "19,99"];
-    //for ( i = 0; i < prices.length; i++)
-    //{
-    //    sum += parseFloat(prices[i]);
-    //}
-	
-    //document.getElementById("price").innerHTML += "Sum: " + sum.toFixed(2);
 }
 
  function parseStorage() {
@@ -38,32 +31,40 @@ function viewCard() {
         var key = parts[0].split(':', 2)[1];
 
         var amount = parts[1].split(':', 2)[1];
-        addIfProductAmountEnough(key.toString(), amount.toString(), par);
+        addIfProductAmountEnough(key.toString(), amount.toString(), par,i);
         getSumOfPrices(key.toString(),amount.toString());
         (parseFloat(sum.innerHTML)).toFixed(2);
-        //else {
-        //    var products = [];
-        //    products = JSON.parse(localStorage.getItem("card"));
-        //    //1) Usuñ z tej listy produkt
-        //    for (int j = i; j < products.length - 2, j++)
-        //        products[i] = products[i + 1];
-        //    //2)nadpisz ca³y storage
-        //    localStorage.setItem("card", JSON.stringify(products))
 
-        //}
+        //refresh data 
+        products_list = JSON.parse(localStorage.getItem("card"));
+        products_list = JSON.stringify(products_list)
+        products_list = products_list.split('}');
+        
     }
 }
 
- function addIfProductAmountEnough(id,amount,par) {
+ function addIfProductAmountEnough(id,amount,par,i) {
      var fn = function (request) {
         var products = document.getElementById("products");
         var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        if (x) {
-			str = "<br>";
-			str += par;
-            products.innerHTML += str;
-            
-        }
+         if (x==="true") {
+             str = "<br>";
+             str += par;
+             products.innerHTML += str;
+         }
+         else {
+            var products = [];
+            products = JSON.parse(localStorage.getItem("card"));
+            //1) Usuñ z tej listy produkt
+             for (j = i; j < products.length ; j++)
+                 products[j] = products[j + 1];
+             //usuñ ostatni element(po przesuniêciu)
+             Array.prototype.pop(products);
+             
+            //2)nadpisz ca³y storages
+             console.log(products);
+            localStorage.setItem("card", JSON.stringify(products))
+         }
     };
     var params = {
             "id": id,
