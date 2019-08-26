@@ -16,7 +16,7 @@ namespace Client.Adapter
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            return client.AddOrderProduct(order.Amount, order.Bar_code,order.ID_client_order);
+            return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
         }
 
         public bool AddProduct(Product product)
@@ -25,7 +25,7 @@ namespace Client.Adapter
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            return client.AddProduct(product.Key,product.Name, product.Size, product.Color, product.Price, product.Type, product.Amount);
+            return client.AddProduct(product.Key, product.Name, product.Size, product.Color, product.Price, product.Type, product.Amount);
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
@@ -39,7 +39,7 @@ namespace Client.Adapter
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-        }        
+        }
 
         public bool AddClient(Client client)
         {
@@ -58,6 +58,17 @@ namespace Client.Adapter
             String[] productList = client.GetProductList();
 
             return productList;
+        }
+
+        public bool ReserveProduct(Product_to_reserve product_To_reserve)
+        {
+            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
+
+            bool reserve = client.ReserveProduct(product_To_reserve.Key,product_To_reserve.Amount);
+
+            return reserve;
         }
     }
 }

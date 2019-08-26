@@ -33,5 +33,12 @@ namespace Client
 
         [OperationContract]
         String[] GetProductList();
+
+        [OperationContract]
+        bool ReserveProduct(string key, string amount);
+
+
+        [OperationContract]
+        int GetAmount_To_Reserve(string id);//mozna zrobic prywatne
     }
 }

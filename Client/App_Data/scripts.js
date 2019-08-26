@@ -13,9 +13,6 @@ function DoAjaxPOST(method, url, fn, params) {
     request.onreadystatechange = handler(request);
     request.send(JSON.stringify(params));
 }
-function BarCodeGenerator() {
-    return Math.random().toString(36).substr(2, 5);
-};
 function DoAjaxGET(method, url, fn) {
     var request = new XMLHttpRequest();
     request.open(method, url, true);
@@ -31,41 +28,10 @@ function DoAjaxGET(method, url, fn) {
     request.send();
 }
 
-function AddProduct() {
-    var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
-    };
-    var key, name, size, color, price, type, amount;
-    key = BarCodeGenerator();
-    name = document.getElementById("name").value;
-    size = document.getElementById("size").value;
-    color = document.getElementById("color").value;
-    price = document.getElementById("price").value;
-    type = document.getElementById("type").value;
-    amount = document.getElementById("amount").value;
-
-    var params = {
-        "product": {
-            "Key": key,
-            "Name": name,
-            "Size": size,
-            "Color": color,
-            "Price": price,
-            "Type": type,
-            "Amount": amount
-        }
-
-    };
-
-    DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
-}
 function AddOrderProduct(barcode, id, amount) {
     var fn = function (request) {
         var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-
+        return x;
     };
     var params = {
         "order": {
@@ -85,17 +51,26 @@ function AddOrderProducts(id) {
         amount = products_list[i].Amount;
         barcode = products_list[i].Key;
 
-        AddOrderProduct(barcode, id, amount);
+        if (AddOrderProduct(barcode, id, amount) != true) {
+            return false;//przetestowac
+        }
     }
+    return true;//przetestowac
 }
-
-
 
 function AddClientOrder() {
     var fn = function (request) {
         var id = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        AddClient(id);
-        AddOrderProducts(id)
+        if (id != true) {
+            alert("cos poszlo nie tak");
+            return
+        }
+        if (AddClient(id) == true && AddOrderProducts(id) == true) {
+            alert("wszystko sie powstalo");
+            //usun z koszyka kupione produkty
+            //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
+        }
+
     };
     var address;
     address = document.getElementById("address").value;
@@ -109,8 +84,8 @@ function AddClientOrder() {
 }
 function AddClient(id) {
     var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        var e = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return e;
     };
     var firstname, surname;
     firstname = document.getElementById("firstname").value;
@@ -133,9 +108,9 @@ function FillTable(e) {
     var tableBody = document.createElement('TBODY')
     table.border = '1'
     table.appendChild(tableBody);
-//column
+    //column
     var tr = document.createElement('TR');
-    var array = ["Name", "ID", "Size", "Color", "Price", "Type", "Available quantity","Buy"];
+    var array = ["Name", "ID", "Size", "Color", "Price", "Type", "Available quantity", "Buy"];
     tableBody.appendChild(tr);
     for (i = 0; i < array.length; i++) {
         var th = document.createElement('TH')
@@ -157,11 +132,10 @@ function FillTable(e) {
             if (j == 1) {
                 key = k;
             }
-            if (j == array.length - 2)
-                {            
-                    k++;                            
-                    continue;
-                }
+            if (j == array.length - 2) {
+                k++;
+                continue;
+            }
             var td = document.createElement('TD')
             td.appendChild(document.createTextNode(e[k]));
             tr.appendChild(td)
@@ -239,7 +213,6 @@ function add_to_card(id, amount_input) {
     var str = parseStorage();
 
     for (i = 0; i < products_list.length; i++) {
-        var x = products_list[i].Key
         if (products_list[i].Key == id) {
             products_list[i].Amount = amount_input
             localStorage.setItem("card", JSON.stringify(products_list))
@@ -277,4 +250,46 @@ function ViewProducts() {
 
 
     DoAjaxGET("GET", "http://127.0.0.1/api/ViewProducts", fn);
+}
+
+function reserve_products() {
+    var products_list = [];
+    products_list = JSON.parse(localStorage.getItem("card"));
+    if (products_list == null) products_list = [];
+    var IfReserved = true;
+    for (i = 0; i < products_list.length; i++) {
+        // if (products_list[i].Amount >= produkt.Amount_To_Reserve) { //uruchomic ostatnie sprawdzenie dostepnosci
+
+        var y = reserve_product(products_list[i]);
+
+
+        //if (y != true) {
+            //IfReserved = false;
+            //alert("rezerwacja sie nie udala");
+            //update koszyka
+            break;
+       // }
+        // }
+        //else 
+        //alert bo nie ma juz
+    }
+    //if (IfReserved == true) {
+     //   alert("rezerwacja sie udala");
+        window.location.href = 'submit.html';
+   // }
+}
+function reserve_product(product) {
+    var fn = function (request) {
+        var y = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return y;
+    };
+
+    var params = {
+        "product_To_reserve": {
+            "Key": product.Key.toString(),
+            "Amount": product.Amount.toString()
+        }
+    };
+    //dodac tu time
+    return DoAjaxPOST("POST", "http://127.0.0.1/api/ReserveProduct",fn, params)
 }
