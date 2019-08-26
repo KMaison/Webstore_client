@@ -54,6 +54,7 @@
     <Compile Include="IService1.cs" />
     <Compile Include="IViewGetter.cs" />
     <Compile Include="Order_products.cs" />
+    <Compile Include="Product_to_reserve.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -12,10 +12,10 @@ namespace Client.Port
     public interface IApi
     {
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "AddProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        [WebInvoke(Method = "POST", UriTemplate = "AddProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest, //usunac!
             RequestFormat = WebMessageFormat.Json)]
         bool AddProduct(Product product);
-        void Index();
+        void Index();//?
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddOrderProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
@@ -25,7 +25,7 @@ namespace Client.Port
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddClientOrder", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
-        bool AddClientOrder(Client_order order);
+        int AddClientOrder(Client_order order);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddClient", BodyStyle = WebMessageBodyStyle.WrappedRequest,
@@ -35,5 +35,10 @@ namespace Client.Port
         [OperationContract]
         [WebGet(UriTemplate = "ViewProducts", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
         String[] ViewProducts();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "ReserveProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+          RequestFormat = WebMessageFormat.Json)]
+        bool ReserveProduct(Product_to_reserve product_To_reserve);
     }
 }

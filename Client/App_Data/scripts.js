@@ -13,9 +13,6 @@ function DoAjaxPOST(method, url, fn, params) {
     request.onreadystatechange = handler(request);
     request.send(JSON.stringify(params));
 }
-function BarCodeGenerator() {
-    return Math.random().toString(36).substr(2, 5);
-};
 function DoAjaxGET(method, url, fn) {
     var request = new XMLHttpRequest();
     request.open(method, url, true);
@@ -31,95 +28,73 @@ function DoAjaxGET(method, url, fn) {
     request.send();
 }
 
-function AddProduct() {
+function AddOrderProduct(barcode, id, amount) {
     var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return x;
     };
-    var key, name, size, color, price, type, amount;
-    key = BarCodeGenerator();
-    name = document.getElementById("name").value;
-    size = document.getElementById("size").value;
-    color = document.getElementById("color").value;
-    price = document.getElementById("price").value;
-    type = document.getElementById("type").value;
-    amount = document.getElementById("amount").value;
-
-    var params = {
-        "product": {
-            "Key": key,
-            "Name": name,
-            "Size": size,
-            "Color": color,
-            "Price": price,
-            "Type": type,
-            "Amount": amount
-        }
-
-    };
-
-    DoAjaxPOST("POST", "http://127.0.0.1/api/AddProduct", fn, params);
-}
-function AddOrderProduct() {
-    var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
-    };
-    var id, amount, barcode;
-    id = document.getElementById("id").value;
-    amount = document.getElementById("amount").value;
-    barcode = document.getElementById("barcode").value;
     var params = {
         "order": {
-            "ID_order_products": id,
             "Amount": amount,
             "Bar_code": barcode,
-            "ID_client_order": 0
+            "ID_client_order": id
 
         }
     };
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddOrderProduct", fn, params);
 }
+
+function AddOrderProducts(id) {
+    var products_list = JSON.parse(localStorage.getItem("card"));
+    var amount, barcode;
+    for (i = 0; i < products_list.length; i++) {
+        amount = products_list[i].Amount;
+        barcode = products_list[i].Key;
+
+        if (AddOrderProduct(barcode, id, amount) != true) {
+            return false;//przetestowac
+        }
+    }
+    return true;//przetestowac
+}
+
 function AddClientOrder() {
     var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
+        var id = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        if (id != true) {
+            alert("cos poszlo nie tak");
+            return
+        }
+        if (AddClient(id) == true && AddOrderProducts(id) == true) {
+            alert("wszystko sie powstalo");
+            //usun z koszyka kupione produkty
+            //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
+        }
+
     };
     var address;
     address = document.getElementById("address").value;
     var params = {
         "order": {
-            "Order_ID": 0,
-            "Address": address,
-            "Order_status": "Processing" //becouse when client create order it is in prccessing mode
+            "Address": address
         }
     };
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
 }
-function AddClient() {
+function AddClient(id) {
     var fn = function (request) {
-        var e = document.getElementById("wynik");
-        e.innerHTML = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        e = document.getElementById("resp");
-        e.innerHTML = request.responseText;
+        var e = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return e;
     };
-    var pesel, firstname, surname, orderID;
-    pesel = document.getElementById("pesel").value;
+    var firstname, surname;
     firstname = document.getElementById("firstname").value;
     surname = document.getElementById("surname").value;
     var params = {
         "client": {
-            "Pesel": pesel,
             "Firstname": firstname,
             "Surname": surname,
-            "Order_ID": 0
+            "Order_ID": id
         }
     };
 
@@ -133,7 +108,7 @@ function FillTable(e) {
     var tableBody = document.createElement('TBODY')
     table.border = '1'
     table.appendChild(tableBody);
-
+    //column
     var tr = document.createElement('TR');
     var array = ["Name", "ID", "Size", "Color", "Price", "Type", "Available quantity", "Buy"];
     tableBody.appendChild(tr);
@@ -145,16 +120,21 @@ function FillTable(e) {
 
     }
     var count, buy_products;
-    var counter = (e.length / 7);
+    var counter = (e.length / 8); //ile produktow
     buy_products = new Array(counter);
     count = new Array(counter);
     var k = 0;
     var key = 0;
+    //rows
     for (i = 0; i < counter; i++) {
         var tr = document.createElement('TR');
-        for (j = 0; j < array.length - 1; j++) {
+        for (j = 0; j < array.length; j++) {
             if (j == 1) {
                 key = k;
+            }
+            if (j == array.length - 2) {
+                k++;
+                continue;
             }
             var td = document.createElement('TD')
             td.appendChild(document.createTextNode(e[k]));
@@ -185,23 +165,17 @@ function FillTable(e) {
             if (parseInt(count[j].value) < 1) {
                 alert("<1")
             }
-            else if (parseInt(count[j].value) <= parseInt(e[6 + j * 7])) {
+            else if (parseInt(count[j].value) <= parseInt(e[7 + j * 8])) {
 
-                add_to_card(e[1 + j * 7], count[j].value);
+                add_to_card(e[1 + j * 8], count[j].value);
             }
             else {
                 alert("We don't have enough products.")
             }
+
         });
-    }
-
-    var viewCardButton = document.createElement('Button');
-    viewCardButton.textContent = "My card";
-    myTableDiv.appendChild(viewCardButton);
-    viewCardButton.addEventListener('click', function () { //button do wykorzystania w przyszlosci
-        viewCard()
-    });
-
+    };
+    viewCard();
 }
 function parseStorage() {
     var products_list = JSON.parse(localStorage.getItem("card"));
@@ -223,13 +197,13 @@ function parseStorage() {
 }
 function viewCard() {
     var card_area = document.getElementById("card")
-    if (JSON.parse(localStorage.getItem("card")) == null)
-    {
+    if (JSON.parse(localStorage.getItem("card")) == null) {
         card_area.innerHTML = "Your card is empty."
         return
     }
-    card_area.innerHTML = ""
-    card_area.innerHTML = parseStorage();
+    card_area.innerHTML = "<strong>Card:</strong> <br>"
+    card_area.innerHTML += parseStorage() + "<br>";
+
 }
 
 function add_to_card(id, amount_input) {
@@ -239,7 +213,6 @@ function add_to_card(id, amount_input) {
     var str = parseStorage();
 
     for (i = 0; i < products_list.length; i++) {
-         var x= products_list[i].Key
         if (products_list[i].Key == id) {
             products_list[i].Amount = amount_input
             localStorage.setItem("card", JSON.stringify(products_list))
@@ -252,8 +225,6 @@ function add_to_card(id, amount_input) {
         Amount: amount_input
     }
 
-
-    var xjkdk = product.Key
     products_list.push((product))
     localStorage.setItem("card", JSON.stringify(products_list))
     viewCard()
@@ -279,4 +250,46 @@ function ViewProducts() {
 
 
     DoAjaxGET("GET", "http://127.0.0.1/api/ViewProducts", fn);
+}
+
+function reserve_products() {
+    var products_list = [];
+    products_list = JSON.parse(localStorage.getItem("card"));
+    if (products_list == null) products_list = [];
+    var IfReserved = true;
+    for (i = 0; i < products_list.length; i++) {
+        // if (products_list[i].Amount >= produkt.Amount_To_Reserve) { //uruchomic ostatnie sprawdzenie dostepnosci
+
+        var y = reserve_product(products_list[i]);
+
+
+        //if (y != true) {
+            //IfReserved = false;
+            //alert("rezerwacja sie nie udala");
+            //update koszyka
+            break;
+       // }
+        // }
+        //else 
+        //alert bo nie ma juz
+    }
+    //if (IfReserved == true) {
+     //   alert("rezerwacja sie udala");
+        window.location.href = 'submit.html';
+   // }
+}
+function reserve_product(product) {
+    var fn = function (request) {
+        var y = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return y;
+    };
+
+    var params = {
+        "product_To_reserve": {
+            "Key": product.Key.toString(),
+            "Amount": product.Amount.toString()
+        }
+    };
+    //dodac tu time
+    return DoAjaxPOST("POST", "http://127.0.0.1/api/ReserveProduct",fn, params)
 }
