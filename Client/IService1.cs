@@ -37,8 +37,13 @@ namespace Client
         [OperationContract]
         bool ReserveProduct(string key, string amount);
 
-
         [OperationContract]
         int GetAmount_To_Reserve(string id);//mozna zrobic prywatne
+
+        [OperationContract]
+        bool ifProductAmountEnough(string id, string amount);
+
+        [OperationContract]
+        string getProductPrice(string id);
     }
 }

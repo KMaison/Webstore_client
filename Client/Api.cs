@@ -66,9 +66,30 @@ namespace Client.Adapter
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            bool reserve = client.ReserveProduct(product_To_reserve.Key,product_To_reserve.Amount);
+            bool reserve = client.ReserveProduct(product_To_reserve.Key, product_To_reserve.Amount);
 
             return reserve;
         }
+
+        public bool ifProductAmountEnough(string id, string amount)
+        {
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+             new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var c = fact.CreateChannel();
+
+            return c.ifProductAmountEnough(id, amount);
+        }
+        public float getProductPrice(string id)
+        {
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var c = fact.CreateChannel();
+            var value = c.getProductPrice(id);
+            if (value != null)
+                return float.Parse(c.getProductPrice(id));
+            else
+                return 0;
+        }
     }
 }
+    

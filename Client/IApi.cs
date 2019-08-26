@@ -40,5 +40,16 @@ namespace Client.Port
         [WebInvoke(Method = "POST", UriTemplate = "ReserveProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
           RequestFormat = WebMessageFormat.Json)]
         bool ReserveProduct(Product_to_reserve product_To_reserve);
+
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "ifProductAmountEnough", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+         RequestFormat = WebMessageFormat.Json)]
+        bool ifProductAmountEnough(string id, string amount);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "getProductPrice", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+       RequestFormat = WebMessageFormat.Json)]
+        float getProductPrice(string id);
     }
 }

@@ -196,7 +196,9 @@ function parseStorage() {
     return replaced
 }
 function viewCard() {
+    var sum = 0;
     var card_area = document.getElementById("card")
+    document.getElementById("price").innerHTML = "0";
     if (JSON.parse(localStorage.getItem("card")) == null) {
         card_area.innerHTML = "Your card is empty."
         return
@@ -204,6 +206,7 @@ function viewCard() {
     card_area.innerHTML = "<strong>Card:</strong> <br>"
     card_area.innerHTML += parseStorage() + "<br>";
 
+    //getSumOfPrices(); <----------do napisania od nowa
 }
 
 function add_to_card(id, amount_input) {
@@ -264,19 +267,19 @@ function reserve_products() {
 
 
         //if (y != true) {
-            //IfReserved = false;
-            //alert("rezerwacja sie nie udala");
-            //update koszyka
-            break;
-       // }
+        //IfReserved = false;
+        //alert("rezerwacja sie nie udala");
+        //update koszyka
+        break;
+        // }
         // }
         //else 
         //alert bo nie ma juz
     }
     //if (IfReserved == true) {
-     //   alert("rezerwacja sie udala");
-        window.location.href = 'submit.html';
-   // }
+    //   alert("rezerwacja sie udala");
+    window.location.href = 'submit.html';
+    // }
 }
 function reserve_product(product) {
     var fn = function (request) {
@@ -291,23 +294,54 @@ function reserve_product(product) {
         }
     };
     //dodac tu time
-    return DoAjaxPOSTret("POST", "http://127.0.0.1/api/ReserveProduct",fn, params)
+    return DoAjaxPOST("POST", "http://127.0.0.1/api/ReserveProduct", fn, params)
 }
 
-function DoAjaxPOSTret(method, url, fn, params) {
-    var request =  new XMLHttpRequest();
-    request.open(method, url, true);
-    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+function addIfProductAmountEnough(id, amount, par, i) {
+    var fn = function (request) {
+        var products = document.getElementById("products");
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        if (x === "true") {
+            str = "<br>";
+            str += par;
+            products.innerHTML += str;
+        }
+        else {
+            var products = [];
+            products = JSON.parse(localStorage.getItem("card"));
+            //1) Usuñ z tej listy produkt
+            for (j = i; j < products.length; j++)
+                products[j] = products[j + 1];
+            //usuñ ostatni element(po przesuniêciu)
+            Array.prototype.pop(products);
 
-    var handler = function (request) {
-        return function () {
-            if (request.readyState != 4) return;
-            if (request.status == 200) 
-                return fn(request);
-            else alert(request.readyState + " " + request.status + " " + request.statusText);
-        };
-    }
-    request.onreadystatechange = handler(request);
-    request.send(JSON.stringify(params));
-    console.log('res'+request.responseText);
+            //2)nadpisz ca³y storages
+            console.log(products);
+            localStorage.setItem("card", JSON.stringify(products))
+        }
+    };
+    var params = {
+        "id": id,
+        "amount": amount
+    };
+    var temp = DoAjaxPOST("POST", "http://127.0.0.1/api/ifProductAmountEnough", fn, params);
+    return temp;
+}
+
+function getSumOfPrices(id, amount) {
+    var fn = function (request) {
+        var s = document.getElementById("price");
+        var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        var sum;
+        if (x) {
+            sum = parseFloat(s.innerHTML);
+            sum += (parseFloat(x) * parseInt(amount));
+            s.innerHTML = sum;
+        }
+    };
+    var params = {
+        "id": id
+    };
+    var temp = DoAjaxPOST("POST", "http://127.0.0.1/api/getProductPrice", fn, params);
+    return temp;
 }
