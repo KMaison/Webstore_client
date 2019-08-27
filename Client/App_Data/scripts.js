@@ -61,15 +61,14 @@ function AddOrderProducts(id) {
 function AddClientOrder() {
     var fn = function (request) {
         var id = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        if (id != true) {
-            alert("cos poszlo nie tak");
-            return
-        }
-        if (AddClient(id) == true && AddOrderProducts(id) == true) {
-            alert("wszystko sie powstalo");
+
+        AddClient(id)
+        AddOrderProducts(id) //todo: weryfikacja tego
+
+            //alert("wszystko sie powstalo");
             //usun z koszyka kupione produkty
             //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
-        }
+
 
     };
     var address;
@@ -187,9 +186,28 @@ function viewCard() {
         return
     }
     card_area.innerHTML = "<strong>Card:</strong> <br>"
-    //card_area.innerHTML += parseStorage() + "<br>";
+    card_area.innerHTML += parseStorage() + "<br>";
 
     //getSumOfPrices(); <----------do napisania od nowa
+}
+
+function parseStorage() {
+    var products_list = JSON.parse(localStorage.getItem("card"));
+    products_list = JSON.stringify(products_list)
+    products_list = products_list.split('}');
+    str = ""
+    for (i = 0; i < products_list.length; i++) {
+        str += "<br>"
+        str += products_list[i];
+    }
+    var replaced = str.replace('[', '');
+    replaced = replaced.replace(/","/g, ' ');
+    replaced = replaced.replace(/"/g, '');
+    replaced = replaced.replace(/]/g, '');
+    replaced = replaced.replace(/,{/g, '');
+    replaced = replaced.replace(/{/g, '');
+    replaced = replaced.replace(/"/g, '');
+    return replaced
 }
 
 function add_to_card(id, amount_input) {
@@ -241,11 +259,9 @@ function reserve_products() {
     var products_list = [];
     products_list = JSON.parse(localStorage.getItem("card"));
     if (products_list == null) products_list = [];
-    var IfReserved = true;
-    for (i = 0; i < products_list.length; i++) {
-        // if (products_list[i].Amount >= produkt.Amount_To_Reserve) { //uruchomic ostatnie sprawdzenie dostepnosci
 
-        var y = reserve_product(products_list[i]);
+    for (i = 0; i < products_list.length; i++) {
+         var y = reserve_product(products_list[i]); //TODO: sprawdzenei czy sie udalo
 
 
         //if (y != true) {

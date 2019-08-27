@@ -12,12 +12,6 @@ namespace Client.Port
     public interface IApi
     {
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "AddProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest, //usunac!
-            RequestFormat = WebMessageFormat.Json)]
-        bool AddProduct(Product product);
-        void Index();//?
-
-        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddOrderProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
         bool AddOrderProduct(Order_products order);

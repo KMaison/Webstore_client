@@ -65,17 +65,8 @@
     <None Include="App_Data\index.xhtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="add_client.html" />
-    <Content Include="add_client_order.html" />
-    <Content Include="add_order_product.html" />
-    <Content Include="add_product.html" />
     <Content Include="App_Data\info.txt" />
     <Content Include="App_Data\scripts.js" />
-    <Content Include="clients.html" />
-    <Content Include="client_order.html" />
-    <Content Include="index.html" />
-    <Content Include="order_products.html" />
-    <Content Include="products.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
