@@ -63,11 +63,11 @@ function AddClientOrder() {
         var id = request.responseXML.childNodes[0].childNodes[0].nodeValue;
 
         AddClient(id)
-        AddOrderProducts(id) //todo: weryfikacja tego
+        AddOrderProducts(id) //todo: weryfikacja tego, transakcyjnosc!!!!!
 
-            //alert("wszystko sie powstalo");
-            //usun z koszyka kupione produkty
-            //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
+        //alert("wszystko sie powstalo");
+        //usun z koszyka kupione produkty
+        //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
 
 
     };
@@ -186,28 +186,17 @@ function viewCard() {
         return
     }
     card_area.innerHTML = "<strong>Card:</strong> <br>"
-    card_area.innerHTML += parseStorage() + "<br>";
+    //card_area.innerHTML += parseStorage() + "<br>";
 
-    //getSumOfPrices(); <----------do napisania od nowa
-}
-
-function parseStorage() {
-    var products_list = JSON.parse(localStorage.getItem("card"));
-    products_list = JSON.stringify(products_list)
-    products_list = products_list.split('}');
-    str = ""
+    var products_list = [];
+    products_list = JSON.parse(localStorage.getItem("card"));
+    if (products_list == null) products_list = [];
     for (i = 0; i < products_list.length; i++) {
-        str += "<br>"
-        str += products_list[i];
+        let key = products_list[i].Key;
+        let amount = products_list[i].Amount;
+        card_area.innerHTML += "Key: " +key + "Amount: "+ amount +"<br>";
     }
-    var replaced = str.replace('[', '');
-    replaced = replaced.replace(/","/g, ' ');
-    replaced = replaced.replace(/"/g, '');
-    replaced = replaced.replace(/]/g, '');
-    replaced = replaced.replace(/,{/g, '');
-    replaced = replaced.replace(/{/g, '');
-    replaced = replaced.replace(/"/g, '');
-    return replaced
+
 }
 
 function add_to_card(id, amount_input) {
@@ -261,7 +250,7 @@ function reserve_products() {
     if (products_list == null) products_list = [];
 
     for (i = 0; i < products_list.length; i++) {
-         var y = reserve_product(products_list[i]); //TODO: sprawdzenei czy sie udalo
+        var y = reserve_product(products_list[i]); //TODO: sprawdzenei czy sie udalo
 
 
         //if (y != true) {

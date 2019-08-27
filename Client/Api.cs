@@ -78,7 +78,10 @@ namespace Client.Adapter
             var c = fact.CreateChannel();
             var value = c.getProductPrice(id);
             if (value != null)
-                return float.Parse(c.getProductPrice(id));
+            {
+                float rett = float.Parse(c.getProductPrice(id));
+                return rett;
+            }
             else
                 return 0;
         }
