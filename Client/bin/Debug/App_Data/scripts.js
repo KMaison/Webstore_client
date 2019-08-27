@@ -178,25 +178,23 @@ function FillTable(e) {
 }
 
 function viewCard() {
-    var sum = 0;
     var card_area = document.getElementById("card")
-    document.getElementById("price").innerHTML += "0";
-    if (JSON.parse(localStorage.getItem("card")) == null) {
-        card_area.innerHTML = "Your card is empty."
-        return
-    }
+    var s = document.getElementById("price");
+    s.innerHTML = "0"
     card_area.innerHTML = "<strong>Card:</strong> <br>"
-    //card_area.innerHTML += parseStorage() + "<br>";
 
     var products_list = [];
     products_list = JSON.parse(localStorage.getItem("card"));
-    if (products_list == null) products_list = [];
+    if (products_list == null) {
+        card_area.innerHTML = "Your card is empty."
+        return
+    }
     for (i = 0; i < products_list.length; i++) {
         let key = products_list[i].Key;
         let amount = products_list[i].Amount;
-        card_area.innerHTML += "Key: " +key + "Amount: "+ amount +"<br>";
+        card_area.innerHTML += "Key: " + key + "Amount: " + amount + "<br>";
+        getSumOfPrices(key, amount);
     }
-
 }
 
 function add_to_card(id, amount_input) {
@@ -321,14 +319,32 @@ function getSumOfPrices(id, amount) {
         var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
         var sum;
         if (x) {
-            sum = parseFloat(s.innerHTML);
-            sum += (parseFloat(x) * parseInt(amount));
-            s.innerHTML = sum;
+            sum = s.innerHTML;
+            sum = parseFloat(sum);
+            sum += parseFloat((parseFloat(x) * parseFloat(amount)));
+            s.innerHTML = sum.toPrecision(5);
         }
     };
     var params = {
         "id": id
     };
-    var temp = DoAjaxPOST("POST", "http://127.0.0.1/api/getProductPrice", fn, params);
+    var temp = DoAjaxPOSTSum("POST", "http://127.0.0.1/api/getProductPrice", fn, params);
     return temp;
+}
+
+function DoAjaxPOSTSum(method, url, fn, params) {
+    var request = new XMLHttpRequest();
+    request.open(method, url, true);
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    var handler = function (request) {
+        return function () {
+            if (request.readyState != 4) return;
+            if (request.status == 200) return fn(request);
+            else alert(request.readyState + " " + request.status + " " + request.statusText);
+        };
+    }
+    request.onreadystatechange = handler(request);
+    request.send(JSON.stringify(params));
+    console.log('res' + request.responseText);
 }
