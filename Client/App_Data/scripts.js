@@ -82,6 +82,24 @@ function AddClientOrder() {
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
 }
+function parseStorage() {
+    var products_list = JSON.parse(localStorage.getItem("card"));
+    products_list = JSON.stringify(products_list)
+    products_list = products_list.split('}');
+    str = ""
+    for (i = 0; i < products_list.length; i++) {
+        str += "<br>"
+        str += products_list[i];
+    }
+    var replaced = str.replace('[', '');
+    replaced = replaced.replace(/","/g, ' ');
+    replaced = replaced.replace(/"/g, '');
+    replaced = replaced.replace(/]/g, '');
+    replaced = replaced.replace(/,{/g, '');
+    replaced = replaced.replace(/{/g, '');
+    replaced = replaced.replace(/"/g, '');
+    return replaced
+}
 function AddClient(id) {
     var fn = function (request) {
         var e = request.responseXML.childNodes[0].childNodes[0].nodeValue;
@@ -181,15 +199,17 @@ function FillTable(e) {
 function viewCard() {
     var sum = 0;
     var card_area = document.getElementById("card")
-    document.getElementById("price").innerHTML += "0";
+    
     if (JSON.parse(localStorage.getItem("card")) == null) {
         card_area.innerHTML = "Your card is empty."
         return
     }
     card_area.innerHTML = "<strong>Card:</strong> <br>"
-    //card_area.innerHTML += parseStorage() + "<br>";
+    card_area.innerHTML += parseStorage() + "<br>";
+
 
     //getSumOfPrices(); <----------do napisania od nowa
+    sumPrices();
 }
 
 function add_to_card(id, amount_input) {
@@ -310,20 +330,50 @@ function addIfProductAmountEnough(id, amount, par, i) {
     return temp;
 }
 
+function DoAjaxPOST123(method, url, fn, params) {
+    var request = new XMLHttpRequest();
+    request.open(method, url, true);
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    var handler = function (request) {
+        return function () {
+            if (request.readyState != 4) return;
+            if (request.status == 200)return fn(request);
+            else alert(request.readyState + " " + request.status + " " + request.statusText);
+        };
+    }
+    request.onreadystatechange = handler(request);
+    request.send(JSON.stringify(params));
+}
+
 function getSumOfPrices(id, amount) {
     var fn = function (request) {
         var s = document.getElementById("price");
         var x = request.responseXML.childNodes[0].childNodes[0].nodeValue;
         var sum;
         if (x) {
+            sum = s.innerHTML;
             sum = parseFloat(s.innerHTML);
             sum += (parseFloat(x) * parseInt(amount));
-            s.innerHTML = sum;
+            s.innerHTML = sum.toString();
         }
     };
     var params = {
         "id": id
     };
-    var temp = DoAjaxPOST("POST", "http://127.0.0.1/api/getProductPrice", fn, params);
+    var temp = DoAjaxPOST123("POST", "http://127.0.0.1/api/getProductPrice", fn, params);
     return temp;
+}
+
+function sumPrices() {
+    var products_list = [];
+    products_list = JSON.parse(localStorage.getItem("card"));
+    if (products_list == null) products_list = [];
+    else {
+        for (i = 0; i < products_list.length; i++) {
+            var a = getSumOfPrices(products_list[i].Key, products_list[i].Amount)
+            console.log(a)
+        }
+    }
+    
 }
