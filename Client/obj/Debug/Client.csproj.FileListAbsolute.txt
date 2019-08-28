@@ -15,7 +15,6 @@ C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Client\obj\Deb
 C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\bin\Debug\Client.exe.config
 C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\bin\Debug\Client.exe
 C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\bin\Debug\Client.pdb
-C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\obj\Debug\Client.csprojAssemblyReference.cache
 C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
 C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\obj\Debug\Client.exe
 C:\Users\Karolina\Desktop\Sklep\Projekt wakacyjny\Webstore_client\Webstore_client\Client\obj\Debug\Client.pdb
