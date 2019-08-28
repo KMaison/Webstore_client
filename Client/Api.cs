@@ -52,18 +52,18 @@ namespace Client.Adapter
             return productList;
         }
 
-        public bool ReserveProduct(Product_to_reserve product_To_reserve)
+        public bool ReserveProduct(Product product)
         {
             ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            bool reserve = client.ReserveProduct(product_To_reserve.Key, product_To_reserve.Amount);
+            bool reserve = client.ReserveProduct(product.Key, product.Amount);
 
             return reserve;
         }
 
-        public bool ifProductAmountEnough(string id, string amount)
+        public bool IfProductAmountEnough(string id, string amount)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
@@ -71,7 +71,7 @@ namespace Client.Adapter
 
             return c.ifProductAmountEnough(id, amount);
         }
-        public float getProductPrice(string id)
+        public float GetProductPrice(string id)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
             new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
@@ -79,11 +79,22 @@ namespace Client.Adapter
             var value = c.getProductPrice(id);
             if (value != null)
             {
-                float rett = float.Parse(c.getProductPrice(id));
-                return rett;
+
+                return float.Parse(c.getProductPrice(id));
             }
             else
                 return 0;
+        }
+
+        public bool Buy(Product product)
+        {
+            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
+
+            bool reserve = client.BuyProduct(product.Key, product.Amount);
+
+            return reserve;
         }
     }
 }

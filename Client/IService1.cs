@@ -9,8 +9,6 @@ namespace WCFServiceWebRole1
     public interface IService1
     {
         [OperationContract]
-        bool AddProduct(string name, string size, string color, string price, string type, string amount);
-        [OperationContract]
         bool UpdateProduct(string key, string size, string color, string price, string type, string amount_Reserved, string amount_To_Reserve);
 
         [OperationContract]
@@ -35,6 +33,9 @@ namespace WCFServiceWebRole1
 
         [OperationContract]
         bool ReserveProduct(string key, string amount);
+
+        [OperationContract]
+        bool BuyProduct(string key, string amount);
 
         [OperationContract]
         int GetAmount_To_Reserve(string id);

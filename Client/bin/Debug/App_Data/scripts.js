@@ -64,10 +64,7 @@ function AddClientOrder() {
 
         AddClient(id)
         AddOrderProducts(id) //todo: weryfikacja tego, transakcyjnosc!!!!!
-
-        //alert("wszystko sie powstalo");
-        //usun z koszyka kupione produkty
-        //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
+        buyProducts();  //usun kupione produkty z bazy (zmniejsz ilosc zarezerwowanych)
 
 
     };
@@ -80,6 +77,35 @@ function AddClientOrder() {
     };
 
     DoAjaxPOST("POST", "http://127.0.0.1/api/AddClientOrder", fn, params);
+}
+
+function buyProducts(){//transakcyjnosc
+    var products_list = [];
+    products_list = JSON.parse(localStorage.getItem("card"));
+    if (products_list == null) products_list = [];
+
+    for (i = 0; i < products_list.length; i++) {
+        var y = buyProduct(products_list[i]); //TODO: sprawdzenei czy sie udalo
+        break;
+    }
+}
+
+function buyProduct(product){
+    var fn = function (request) {
+        var result = request.responseXML.childNodes[0].childNodes[0].nodeValue;
+        return result; //todo: jak dobrze to usun z local storage
+    };
+    var firstname, surname;
+    firstname = document.getElementById("firstname").value;
+    surname = document.getElementById("surname").value;
+    var params = {
+        "product": {
+            "Key": product.Key.toString(),
+            "Amount": product.Amount.toString()
+        }
+    };
+
+    DoAjaxPOST("POST", "http://127.0.0.1/api/buyProduct", fn, params);
 }
 function AddClient(id) {
     var fn = function (request) {
@@ -255,7 +281,6 @@ function reserve_products() {
         //IfReserved = false;
         //alert("rezerwacja sie nie udala");
         //update koszyka
-        break;
         // }
         // }
         //else 
@@ -273,7 +298,7 @@ function reserve_product(product) {
     };
 
     var params = {
-        "product_To_reserve": {
+        "product": {
             "Key": product.Key.toString(),
             "Amount": product.Amount.toString()
         }
