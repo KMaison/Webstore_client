@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using WCFServiceWebRole1;
 
 namespace Client.Adapter
 {
@@ -17,15 +18,6 @@ namespace Client.Adapter
             var client = fact.CreateChannel();
 
             return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
-        }
-
-        public bool AddProduct(Product product)
-        {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
-
-            return client.AddProduct(product.Key, product.Name, product.Size, product.Color, product.Price, product.Type, product.Amount);
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
@@ -60,18 +52,18 @@ namespace Client.Adapter
             return productList;
         }
 
-        public bool ReserveProduct(Product_to_reserve product_To_reserve)
+        public bool ReserveProduct(Product product)
         {
             ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
-            bool reserve = client.ReserveProduct(product_To_reserve.Key, product_To_reserve.Amount);
+            bool reserve = client.ReserveProduct(product.Key, product.Amount);
 
             return reserve;
         }
 
-        public bool ifProductAmountEnough(string id, string amount)
+        public bool IfProductAmountEnough(string id, string amount)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
@@ -79,16 +71,30 @@ namespace Client.Adapter
 
             return c.ifProductAmountEnough(id, amount);
         }
-        public float getProductPrice(string id)
+        public float GetProductPrice(string id)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
             new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var c = fact.CreateChannel();
             var value = c.getProductPrice(id);
             if (value != null)
+            {
+
                 return float.Parse(c.getProductPrice(id));
+            }
             else
                 return 0;
+        }
+
+        public bool Buy(Product product)
+        {
+            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
+
+            bool reserve = client.BuyProduct(product.Key, product.Amount);
+
+            return reserve;
         }
     }
 }
