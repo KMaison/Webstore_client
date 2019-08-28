@@ -11,17 +11,8 @@ namespace Client
     public class Product
     {
         [DataMember]
-        public string Name { get; set; }
-        [DataMember]
         public string Key { get; set; }
-        [DataMember]
-        public string Size { get; set; }
-        [DataMember]
-        public string Color { get; set; }
-        [DataMember]
-        public string Price { get; set; }
-        [DataMember]
-        public string Type { get; set; }
+
         [DataMember]
         public string Amount { get; set; }
     }

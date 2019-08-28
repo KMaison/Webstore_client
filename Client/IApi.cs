@@ -12,12 +12,6 @@ namespace Client.Port
     public interface IApi
     {
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "AddProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
-            RequestFormat = WebMessageFormat.Json)]
-        bool AddProduct(Product product);
-        void Index();
-
-        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddOrderProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
         bool AddOrderProduct(Order_products order);
@@ -45,5 +39,26 @@ namespace Client.Port
         [OperationContract]
         [WebGet(UriTemplate = "ViewProducts", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
         String[] ViewProducts();
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "ReserveProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+          RequestFormat = WebMessageFormat.Json)]
+        bool ReserveProduct(Product product);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "ifProductAmountEnough", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+         RequestFormat = WebMessageFormat.Json)]
+        bool IfProductAmountEnough(string id, string amount);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "getProductPrice", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+       RequestFormat = WebMessageFormat.Json)]
+        float GetProductPrice(string id);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "buyProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+       RequestFormat = WebMessageFormat.Json)]
+        bool Buy(Product product);
     }
+
 }

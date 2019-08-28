@@ -8,30 +8,29 @@
         border: solid 2px rgb(148, 148, 148);
         padding: 5px;
         text-align: center;
-
     }
 </style>
 
 <head>
     <title>Story</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script type="text/javascript" src="./scripts.js"></script>
+    <script type="text/javascript" src="./viewProducts.js"></script>
+    <script type="text/javascript" src="./card.js"></script>
+    <script type="text/javascript" src="./reserve_product.js"></script>
+    <script type="text/javascript" src="./order-flow.js"></script>
+    <script type="text/javascript" src="./ajax.js"></script>
+
 </head>
 
 <body>
     <div class="card">
-        <div id="card">
-            <div id="name"></div>
-            <br>
-            <div id="products"></div>
-            <br>
-            <div id="price"></div>
-        </div>
+        <div id="card"></div>
+        
+        Sum:  <div id="price">0</div>
         <script>viewCard()</script>
 
         <p>
-            <button type="button" onclick="location.href='submit.html';"
-                style="display: inline-block; display: inline-block;">Buy</button> <br />
+            <button type="button" onclick="reserve_products()">Reserve products & Buy</button> <br />
         </p>
     </div>
 
