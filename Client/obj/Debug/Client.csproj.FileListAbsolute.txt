@@ -1,0 +1,6 @@
+C:\Users\karol\OneDrive\Pulpit\KSR-projekty\Webstore_client\Client\bin\Debug\Client.exe.config
+C:\Users\karol\OneDrive\Pulpit\KSR-projekty\Webstore_client\Client\bin\Debug\Client.exe
+C:\Users\karol\OneDrive\Pulpit\KSR-projekty\Webstore_client\Client\bin\Debug\Client.pdb
+C:\Users\karol\OneDrive\Pulpit\KSR-projekty\Webstore_client\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\karol\OneDrive\Pulpit\KSR-projekty\Webstore_client\Client\obj\Debug\Client.exe
+C:\Users\karol\OneDrive\Pulpit\KSR-projekty\Webstore_client\Client\obj\Debug\Client.pdb
