@@ -5,6 +5,7 @@ function reserve_products() {
     if (products_list == null) products_list = [];
 
     for (i = 0; i < products_list.length; i++) {
+        addIfProductAmountEnough(products_list[i].Key, products_list[i].Amount, i);
         var y = reserve_product(products_list[i]); //TODO: sprawdzenei czy sie udalo
 
 
