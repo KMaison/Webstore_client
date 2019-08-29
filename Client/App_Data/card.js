@@ -38,6 +38,7 @@ function addIfProductAmountEnough(id, amount, /*par,*/ i) {
       }
       localStorage.setItem("card", JSON.stringify(products));
       console.log(JSON.parse(localStorage.getItem("card")));
+      alert("The product with barcode " + products_from_card[i].Key + " was bought by someone else.")
     }
   };
   var params = {
