@@ -1,45 +1,41 @@
 ﻿using Client.Port;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Transactions;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 using WCFServiceWebRole1;
 
 namespace Client.Adapter
 {
     public class Api : IApi
     {
-        public bool AddOrderProduct(Order_products order)
+        [OperationBehavior(TransactionScopeRequired = true)]
+        public void OrderProducts(Order order)
         {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
+            
+            using (var transactionScope = new TransactionScope(TransactionScopeOption.Required))
+            {
+                var fact = new ChannelFactory<IService1>(new WSDualHttpBinding
+                {
+                    TransactionFlow = true
+                }, new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+                var client = fact.CreateChannel();
+                try 
+                {
+                    client.CreateClientOrder(order.ClientOrder.Address);
+                    client.AddClient(order.Client.Firstname, order.Client.Surname, "1");
 
-            return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
-        }
-        public int AddClientOrder(Client_order order)//TODO: zamienic na string
-        {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
-            return client.CreateClientOrder(order.Address);
-        }
-        public void Index()
-        {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
-        }
-
-        public bool AddClient(Client client)
-        {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var c = fact.CreateChannel();
-
-            return c.AddClient(client.Firstname, client.Surname, client.Order_ID);
+                    foreach (var orderProduct in order.OrderProducts)
+                    {
+                        client.AddOrderProduct(orderProduct.Amount, orderProduct.BarCode, "1");
+                        client.BuyProduct(orderProduct.BarCode, orderProduct.Amount);
+                    }
+                    transactionScope.Complete();
+                }
+                catch (Exception ex)
+                {
+                    transactionScope.Dispose();
+                }
+            }
         }
         public String[] ViewProducts()
         {
@@ -71,6 +67,7 @@ namespace Client.Adapter
 
             return c.ifProductAmountEnough(id, amount);
         }
+
         public float GetProductPrice(string id)
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
@@ -86,15 +83,11 @@ namespace Client.Adapter
                 return 0;
         }
 
-        public bool Buy(Product product)
+        public void Index()
         {
-            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-
-            bool reserve = client.BuyProduct(product.Key, product.Amount);
-
-            return reserve;
         }
     }
 }

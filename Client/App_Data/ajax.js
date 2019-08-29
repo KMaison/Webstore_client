@@ -11,6 +11,7 @@ function doAjaxPOST(method, url, fn, params) {
         };
     }
     request.onreadystatechange = handler(request);
+    var temp = JSON.stringify(params);
     request.send(JSON.stringify(params));
 }
 function doAjaxGET(method, url, fn) {

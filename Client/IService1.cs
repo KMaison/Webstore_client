@@ -12,12 +12,15 @@ namespace WCFServiceWebRole1
         bool UpdateProduct(string key, string size, string color, string price, string type, string amount_Reserved, string amount_To_Reserve);
 
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Mandatory)]
         bool AddOrderProduct(string amount, string bar_code, string id_client_order);
 
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Mandatory)]
         bool AddClient(string first_name, string surname, string order_id);
 
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Mandatory)]
         int CreateClientOrder(string address);
 
         [OperationContract]
@@ -35,6 +38,7 @@ namespace WCFServiceWebRole1
         bool ReserveProduct(string key, string amount);
 
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Mandatory)]
         bool BuyProduct(string key, string amount);
 
         [OperationContract]
@@ -46,6 +50,7 @@ namespace WCFServiceWebRole1
         String[] SetProductList();
 
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Mandatory)]
         string getProductPrice(string id);
     }
 }
