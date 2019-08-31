@@ -1,12 +1,8 @@
 ﻿using Client.Adapter;
 using Client.Port;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using System.ServiceModel.Web;
-using System.Text;
 
 //http://127.0.0.1/ViewGetter/GetView/index.html
 namespace Client
@@ -21,7 +17,8 @@ namespace Client
             serviceHost.Open();
 
             var apiServiceHost = new ServiceHost(typeof(Api));
-            var apiServiceEndpoint = apiServiceHost.AddServiceEndpoint(typeof(IApi), new WebHttpBinding(), "http://127.0.0.1/api");
+            var apiServiceEndpoint = apiServiceHost
+                .AddServiceEndpoint(typeof(IApi), new WebHttpBinding(), "http://127.0.0.1/api");
             apiServiceEndpoint.Behaviors.Add(new WebHttpBehavior());
             apiServiceHost.Open();
 
