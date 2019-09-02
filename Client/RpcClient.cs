@@ -46,12 +46,29 @@ namespace Client
             };
         }
 
-        public string Call(string message)
+        public string CallReservation(string message)
         {
             var messageBytes = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(
                 exchange: "",
-                routingKey: "rpc_queue",
+                routingKey: "reservation_queue",
+                basicProperties: props,
+                body: messageBytes);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+
+            return respQueue.Take();
+        }
+
+        public string CallBuying(string message)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "buying_queue",
                 basicProperties: props,
                 body: messageBytes);
 

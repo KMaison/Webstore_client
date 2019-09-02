@@ -24,11 +24,19 @@ namespace Client.Adapter
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
+            var rpcClient = new RpcClient();
+
+            Console.WriteLine(" [x] Requesting add client order(" + order.Address + ")");
+            var response = rpcClient.CallBuying(order.Address);
+
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            return Int32.Parse(response);
+            //var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            //    new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            //var client = fact.CreateChannel();
            
-            return client.CreateClientOrder(order.Address);
+            //return client.CreateClientOrder(order.Address);
         }
         public void Index()
         {
@@ -39,6 +47,7 @@ namespace Client.Adapter
 
         public bool AddClient(Client client)
         {
+
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var c = fact.CreateChannel();
@@ -62,19 +71,12 @@ namespace Client.Adapter
             var rpcClient = new RpcClient();
 
             Console.WriteLine(" [x] Requesting Reserve product("+product.Key+")");
-            var response = rpcClient.Call(product.Key+","+ product.Amount);
+            var response = rpcClient.CallReservation(product.Key+","+ product.Amount);
 
             Console.WriteLine(" [.] Got '{0}'", response);
             rpcClient.Close();
             if (response != null) return true;
             return false;
-            //ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-            //    new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            //var client = fact.CreateChannel();
-
-            //bool reserve = client.ReserveProduct(product.Key, product.Amount);
-
-            //return reserve;
         }
 
         public bool IfProductAmountEnough(string id, string amount)
