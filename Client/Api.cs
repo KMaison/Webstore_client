@@ -14,20 +14,13 @@ namespace Client.Adapter
     {
         public bool AddOrderProduct(Order_products order)
         {
-            //var rpcClient = new RpcClient();
-
-            //Console.WriteLine(" [x] Requesting add order product");
-            //string json = JsonConvert.SerializeObject(order);
-            //var response = rpcClient.Call(json);
-
-            //Console.WriteLine(" [.] Got '{0}'", response);
-            //rpcClient.Close();
+            
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
             return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
-           // return response;
+            
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
@@ -65,13 +58,23 @@ namespace Client.Adapter
 
         public bool ReserveProduct(Product product)
         {
-            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
 
-            bool reserve = client.ReserveProduct(product.Key, product.Amount);
+            var rpcClient = new RpcClient();
 
-            return reserve;
+            Console.WriteLine(" [x] Requesting Reserve product("+product.Key+")");
+            var response = rpcClient.Call(product.Key+","+ product.Amount);
+
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            if (response != null) return true;
+            return false;
+            //ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            //    new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            //var client = fact.CreateChannel();
+
+            //bool reserve = client.ReserveProduct(product.Key, product.Amount);
+
+            //return reserve;
         }
 
         public bool IfProductAmountEnough(string id, string amount)

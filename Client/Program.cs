@@ -16,14 +16,6 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            var rpcClient = new RpcClient();
-
-            Console.WriteLine(" [x] Requesting getProductPrice(3)");
-            var response = rpcClient.Call("3");
-
-            Console.WriteLine(" [.] Got '{0}'", response);
-            rpcClient.Close();
-            ////////////////////////////////////
             var serviceHost = new ServiceHost(typeof(ViewGetter));
             var serviceEndpoint = serviceHost.AddServiceEndpoint(typeof(IViewGetter), new WebHttpBinding(), "http://127.0.0.1/ViewGetter");
             serviceEndpoint.Behaviors.Add(new WebHttpBehavior());
