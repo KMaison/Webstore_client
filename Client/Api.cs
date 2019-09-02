@@ -1,4 +1,5 @@
 ﻿using Client.Port;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,27 @@ namespace Client.Adapter
     {
         public bool AddOrderProduct(Order_products order)
         {
+            //var rpcClient = new RpcClient();
+
+            //Console.WriteLine(" [x] Requesting add order product");
+            //string json = JsonConvert.SerializeObject(order);
+            //var response = rpcClient.Call(json);
+
+            //Console.WriteLine(" [.] Got '{0}'", response);
+            //rpcClient.Close();
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
 
             return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
+           // return response;
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
+           
             return client.CreateClientOrder(order.Address);
         }
         public void Index()

@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 //http://127.0.0.1/ViewGetter/GetView/index.html
 namespace Client
@@ -15,6 +16,14 @@ namespace Client
     {
         static void Main(string[] args)
         {
+            var rpcClient = new RpcClient();
+
+            Console.WriteLine(" [x] Requesting getProductPrice(3)");
+            var response = rpcClient.Call("3");
+
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            ////////////////////////////////////
             var serviceHost = new ServiceHost(typeof(ViewGetter));
             var serviceEndpoint = serviceHost.AddServiceEndpoint(typeof(IViewGetter), new WebHttpBinding(), "http://127.0.0.1/ViewGetter");
             serviceEndpoint.Behaviors.Add(new WebHttpBehavior());
@@ -28,6 +37,8 @@ namespace Client
             Console.ReadLine();
             serviceHost.Close();
             apiServiceHost.Close();
+           
+  
         }
     }
 }
