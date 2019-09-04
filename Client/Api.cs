@@ -52,11 +52,21 @@ namespace Client.Adapter
 
         public bool AddClient(Client client)
         {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var c = fact.CreateChannel();
+            var rpcClient = new RPCClinet();
 
-            return c.AddClient(client.Firstname, client.Surname, client.Order_ID);
+            Console.WriteLine(" [x] Requesting add client(" + client.Firstname + ")");
+            var response = rpcClient.CallBuying("Client?" + client.Firstname + "," + client.Surname + "," + client.Order_ID);
+
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            if (response.Equals(" ")) return false;
+            else return true;
+
+            //var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            //  new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            //var c = fact.CreateChannel();
+
+            //return c.AddClient(client.Firstname, client.Surname, client.Order_ID);
         }
         public String[] ViewProducts()
         {
