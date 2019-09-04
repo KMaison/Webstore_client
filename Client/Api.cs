@@ -13,18 +13,35 @@ namespace Client.Adapter
     {
         public bool AddOrderProduct(Order_products order)
         {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
+            var rpcClient = new RPCClinet();
 
-            return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
+            Console.WriteLine(" [x] Requesting add order product(" + order.Bar_code + ")");
+            var response = rpcClient.CallBuying("ProductOrder?" + order.Amount+","+order.Bar_code + "," + order.ID_client_order);
+
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            if (response.Equals(" ")) return false;
+            else return true;
+            //var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            //  new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            //var client = fact.CreateChannel();
+
+            //return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
-            return client.CreateClientOrder(order.Address);
+            var rpcClient = new RPCClinet();
+
+            Console.WriteLine(" [x] Requesting add client order(" + order.Address + ")");
+            var response = rpcClient.CallBuying("ClientOrder?" + order.Address );
+
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            return Int32.Parse(response);
+            //var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            //    new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            //var client = fact.CreateChannel();
+            //return client.CreateClientOrder(order.Address);
         }
         public void Index()
         {

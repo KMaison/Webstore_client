@@ -59,6 +59,22 @@ namespace Client
 
             return respQueue.Take();
         }
+        public string CallBuying(string message)
+        {
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "buying_queue",
+                basicProperties: props,
+                body: messageBytes);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+
+            return respQueue.Take();
+        }
 
         public void Close()
         {
