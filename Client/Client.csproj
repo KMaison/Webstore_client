@@ -58,10 +58,11 @@
   <ItemGroup>
     <Compile Include="Api.cs" />
     <Compile Include="Client.cs" />
-    <Compile Include="Client_order.cs" />
+    <Compile Include="ClientOrder.cs" />
     <Compile Include="IApi.cs" />
     <Compile Include="IService1.cs" />
     <Compile Include="IViewGetter.cs" />
+    <Compile Include="Order.cs" />
     <Compile Include="Order_products.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />

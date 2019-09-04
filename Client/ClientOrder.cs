@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    public class Client_order
+    public class ClientOrder
     {
         public string Address { get; set; }
     }
