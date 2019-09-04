@@ -1,5 +1,4 @@
 ﻿using Client.Port;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,27 +13,18 @@ namespace Client.Adapter
     {
         public bool AddOrderProduct(Order_products order)
         {
-            var rpcClient = new RpcClient();
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
 
-            Console.WriteLine(" [x] Add order product(" + order.Bar_code + ")");
-            var response = rpcClient.CallBuying("OrderProduct?"+order.Amount+','+ order.Bar_code + ',' + order.ID_client_order);
-
-            Console.WriteLine(" [.] Got '{0}'", response);
-            rpcClient.Close();
-            if (response != null) return true;
-            return false;
-            
+            return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
         }
         public int AddClientOrder(Client_order order)//TODO: zamienic na string
         {
-            var rpcClient = new RpcClient();
-
-            Console.WriteLine(" [x] Requesting add client order(" + order.Address + ")");
-            var response = rpcClient.CallBuying("ClientOrder?"+order.Address);
-
-            Console.WriteLine(" [.] Got '{0}'", response);
-            rpcClient.Close();
-            return Int32.Parse(response);
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var client = fact.CreateChannel();
+            return client.CreateClientOrder(order.Address);
         }
         public void Index()
         {
@@ -45,15 +35,11 @@ namespace Client.Adapter
 
         public bool AddClient(Client client)
         {
-            var rpcClient = new RpcClient();
+            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            var c = fact.CreateChannel();
 
-            Console.WriteLine(" [x] Requesting add client (" + client.Firstname + ")");
-            var response = rpcClient.CallBuying("Client?" + client.Firstname+","+client.Surname+","+client.Order_ID);
-
-            Console.WriteLine(" [.] Got '{0}'", response);
-            rpcClient.Close();
-            if (response != null) return true;
-            return false;
+            return c.AddClient(client.Firstname, client.Surname, client.Order_ID);
         }
         public String[] ViewProducts()
         {
@@ -68,16 +54,23 @@ namespace Client.Adapter
 
         public bool ReserveProduct(Product product)
         {
+            var rpcClient = new RPCClinet();
 
-            var rpcClient = new RpcClient();
-
-            Console.WriteLine(" [x] Requesting Reserve product("+product.Key+")");
-            var response = rpcClient.CallReservation(product.Key+","+ product.Amount);
+            Console.WriteLine(" [x] Requesting reservation("+product.Key+")");
+            var response = rpcClient.CallReservation("ReserveProduct?"+product.Key+","+product.Amount);
 
             Console.WriteLine(" [.] Got '{0}'", response);
             rpcClient.Close();
-            if (response != null) return true;
-            return false;
+            if (response == " ") return false;
+            else return true;
+
+            //ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
+            //    new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
+            //var client = fact.CreateChannel();
+
+            //bool reserve = client.ReserveProduct(product.Key, product.Amount);
+
+            //return reserve;
         }
 
         public bool IfProductAmountEnough(string id, string amount)

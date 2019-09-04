@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Threading;
 
 namespace Client
 {
-
-    public class RpcClient
+    class RPCClinet
     {
-
         private readonly IConnection connection;
         private readonly IModel channel;
         private readonly string replyQueueName;
@@ -21,7 +18,7 @@ namespace Client
         private readonly BlockingCollection<string> respQueue = new BlockingCollection<string>();
         private readonly IBasicProperties props;
 
-        public RpcClient()
+        public RPCClinet()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
 
@@ -63,29 +60,9 @@ namespace Client
             return respQueue.Take();
         }
 
-        public string CallBuying(string message)
-        {
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-            channel.BasicPublish(
-                exchange: "",
-                routingKey: "buying_queue",
-                basicProperties: props,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
-                autoAck: true);
-
-            return respQueue.Take();
-        }
-
         public void Close()
         {
             connection.Close();
         }
     }
-
 }
-
-
