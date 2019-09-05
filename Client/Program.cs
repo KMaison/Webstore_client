@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 
 //http://127.0.0.1/ViewGetter/GetView/index.html
 namespace Client
@@ -28,6 +29,8 @@ namespace Client
             Console.ReadLine();
             serviceHost.Close();
             apiServiceHost.Close();
+           
+  
         }
     }
 }

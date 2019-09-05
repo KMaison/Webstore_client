@@ -11,35 +11,39 @@ namespace Client.Adapter
 {
     public class Api : IApi
     {
-        public bool AddOrderProduct(Order_products order)
-        {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
 
-            return client.AddOrderProduct(order.Amount, order.Bar_code, order.ID_client_order);
-        }
-        public int AddClientOrder(Client_order order)//TODO: zamienic na string
+        public void OrderProducts(Order order)
         {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
-            return client.CreateClientOrder(order.Address);
+            var rpcClient = new RPCClinet();
+            try
+            {
+                var parameters = "Buy?" + order.ClientOrder.Address;
+
+                parameters += ";" + order.Client.Firstname + "," + order.Client.Surname  /*+ clresponse*/;
+
+                foreach (var orderProduct in order.OrderProducts)
+                {
+                    parameters += ";" + orderProduct.Amount + "," + orderProduct.BarCode  /*+ clresponse*/;
+                    //TODO:
+                    //client.BuyProduct(orderProduct.BarCode, orderProduct.Amount);                    
+                    //var bpresponse = rpcClient.CallBuying("BuyProduct?" + orderProduct.BarCode + "," + orderProduct.Amount);
+                }
+                parameters += ";";
+                var opresponse = rpcClient.CallBuying(parameters);
+                Console.WriteLine(" [.] Got '{0}'", opresponse);
+            }
+            catch
+            {
+                Console.WriteLine("problem z kolejka");
+            }
+
         }
+
         public void Index()
         {
             var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
             var client = fact.CreateChannel();
-        }
-
-        public bool AddClient(Client client)
-        {
-            var fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-              new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var c = fact.CreateChannel();
-
-            return c.AddClient(client.Firstname, client.Surname, client.Order_ID);
         }
         public String[] ViewProducts()
         {
@@ -54,13 +58,15 @@ namespace Client.Adapter
 
         public bool ReserveProduct(Product product)
         {
-            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
+            var rpcClient = new RPCClinet();
 
-            bool reserve = client.ReserveProduct(product.Key, product.Amount);
+            Console.WriteLine(" [x] Requesting reservation(" + product.Key + ")");
+            var response = rpcClient.CallReservation("ReserveProduct?" + product.Key + "," + product.Amount);
 
-            return reserve;
+            Console.WriteLine(" [.] Got '{0}'", response);
+            rpcClient.Close();
+            if (response == " ") return false;
+            else return true;
         }
 
         public bool IfProductAmountEnough(string id, string amount)
@@ -84,17 +90,6 @@ namespace Client.Adapter
             }
             else
                 return 0;
-        }
-
-        public bool Buy(Product product)
-        {
-            ChannelFactory<IService1> fact = new ChannelFactory<IService1>(new BasicHttpBinding(),
-               new EndpointAddress("http://localhost:28732/Service1.svc?singleWsdl"));
-            var client = fact.CreateChannel();
-
-            bool reserve = client.BuyProduct(product.Key, product.Amount);
-
-            return reserve;
         }
     }
 }

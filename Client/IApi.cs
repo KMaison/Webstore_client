@@ -12,6 +12,11 @@ namespace Client.Port
     public interface IApi
     {
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "OrderProducts", BodyStyle = WebMessageBodyStyle.WrappedRequest,
+           RequestFormat = WebMessageFormat.Json)]
+        void OrderProducts(Order order);
+
+       /* [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddOrderProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
         bool AddOrderProduct(Order_products order);
@@ -25,7 +30,7 @@ namespace Client.Port
         [WebInvoke(Method = "POST", UriTemplate = "AddClient", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
         bool AddClient(Client client);
-
+        */
         [OperationContract]
         [WebGet(UriTemplate = "ViewProducts", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
         String[] ViewProducts();
@@ -45,10 +50,10 @@ namespace Client.Port
        RequestFormat = WebMessageFormat.Json)]
         float GetProductPrice(string id);
 
-        [OperationContract]
+        /*[OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "buyProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,
        RequestFormat = WebMessageFormat.Json)]
         bool Buy(Product product);
-    }
+   */ }
 
 }

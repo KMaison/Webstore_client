@@ -1,6 +1,9 @@
 function add_to_card(id, amount_input) {
   var products_list = [];
-  products_list = JSON.parse(localStorage.getItem("card"));
+  if (localStorage.getItem("card") !== "") {
+    products_list = JSON.parse(localStorage.getItem("card"));
+  } 
+ 
   if (products_list == null) products_list = [];
 
   for (i = 0; i < products_list.length; i++) {
@@ -29,7 +32,7 @@ function addIfProductAmountEnough(id, amount, /*par,*/ i) {
     if (x === "false") {
       var products = [];
       products_from_card = JSON.parse(localStorage.getItem("card"));
-      console.log(i)
+      console.log(i);
       for (n = 0; n < i; n++) {
         products.push(products_from_card[n]);
       }
@@ -38,7 +41,11 @@ function addIfProductAmountEnough(id, amount, /*par,*/ i) {
       }
       localStorage.setItem("card", JSON.stringify(products));
       console.log(JSON.parse(localStorage.getItem("card")));
-      alert("The product with barcode " + products_from_card[i].Key + " was bought by someone else.")
+      alert(
+        "The product with barcode " +
+          products_from_card[i].Key +
+          " was bought by someone else."
+      );
     }
   };
   var params = {
@@ -85,8 +92,11 @@ function viewCard() {
   card_area.innerHTML = "<strong>Card:</strong> <br>";
 
   var products_list = [];
-  products_list = JSON.parse(localStorage.getItem("card"));
-  if (products_list == null) {
+
+  if (localStorage.getItem("card") !== "") {
+    products_list = JSON.parse(localStorage.getItem("card"));
+  } 
+  else {
     card_area.innerHTML = "Your card is empty.";
     return;
   }
