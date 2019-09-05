@@ -81,15 +81,7 @@ namespace Client
                 queue: replyQueueName,
                 autoAck: true);
             var a = respQueue.Take();
-
-            //channel.TxSelect();
             
-            //if(!a.Equals("True"))
-            //{
-            //    channel.TxRollback();
-            //}
-
-            //else channel.TxCommit();
             return a;
         }
         public string CallBuying(string message)
@@ -105,22 +97,9 @@ namespace Client
                 consumer: consumer1,
                 queue: replyQueueName1,
                 autoAck: true);
-
-            //return respQueue.Take();
+            
             var a = respQueue.Take();
-
-            //channel.TxSelect();
-
-            //if (a.Equals("False") || (a.Equals("0")))
-            //{
-            //    try
-            //    { channel.TxRollback(); }
-            //    catch
-            //    { Console.WriteLine("breaking"); }
-                
-            //}
-
-            //else channel.TxCommit();
+           
             return a;
         }
 

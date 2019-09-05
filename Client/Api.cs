@@ -31,6 +31,7 @@ namespace Client.Adapter
                 parameters += ";";
                 var opresponse = rpcClient.CallBuying(parameters);
                 Console.WriteLine(" [.] Got '{0}'", opresponse);
+                
             }
             catch
             {
