@@ -23,9 +23,11 @@ function orderProducts() {
 
 function getClientOrder() {
     var address = document.getElementById("address").value;
+    var mail = document.getElementById("email").value;
 
     return {
-        Address: address
+        Address: address,
+        Mail: mail
     };
 }
 

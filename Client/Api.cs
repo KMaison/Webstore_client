@@ -17,18 +17,16 @@ namespace Client.Adapter
             var rpcClient = new RPCClinet();
             try
             {
-                var parameters = "Buy?" + order.ClientOrder.Address;
+                var parameters = "Buy?" + order.ClientOrder.Mail +";"+ order.ClientOrder.Address;
 
-                parameters += ";" + order.Client.Firstname + "," + order.Client.Surname  /*+ clresponse*/;
+                parameters += ";" + order.Client.Firstname + "," + order.Client.Surname /*+ clresponse*/;
 
                 foreach (var orderProduct in order.OrderProducts)
                 {
                     parameters += ";" + orderProduct.Amount + "," + orderProduct.BarCode  /*+ clresponse*/;//Order products
 
                     parameters += ";" + orderProduct.BarCode + "," + orderProduct.Amount  /*+ clresponse*/;//Buy Products
-                    //TODO:
-                    //client.BuyProduct(orderProduct.BarCode, orderProduct.Amount);                    
-                    //var bpresponse = rpcClient.CallBuying("BuyProduct?" + orderProduct.BarCode + "," + orderProduct.Amount);
+                   
                 }
                 parameters += ";";
                 var opresponse = rpcClient.CallBuying(parameters);

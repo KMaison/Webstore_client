@@ -9,5 +9,7 @@ namespace Client
     public class ClientOrder
     {
         public string Address { get; set; }
+
+        public string Mail { get; set; }
     }
 }
