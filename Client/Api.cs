@@ -12,7 +12,7 @@ namespace Client.Adapter
     public class Api : IApi
     {
 
-        public void OrderProducts(Order order)
+        public bool OrderProducts(Order order)
         {
             var rpcClient = new RPCClinet();
             try
@@ -33,13 +33,14 @@ namespace Client.Adapter
                 parameters += ";";
                 var opresponse = rpcClient.CallBuying(parameters);
                 Console.WriteLine(" [.] Buing got '{0}'", opresponse);
+                if (opresponse.Equals("True")) return true;
                 
             }
             catch
             {
                 Console.WriteLine("problem z kolejka");
             }
-
+            return false;
         }
 
         public void Index()

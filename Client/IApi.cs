@@ -14,7 +14,7 @@ namespace Client.Port
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "OrderProducts", BodyStyle = WebMessageBodyStyle.WrappedRequest,
            RequestFormat = WebMessageFormat.Json)]
-        void OrderProducts(Order order);
+        bool OrderProducts(Order order);
 
        /* [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "AddOrderProduct", BodyStyle = WebMessageBodyStyle.WrappedRequest,

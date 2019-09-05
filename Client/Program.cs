@@ -18,12 +18,15 @@ namespace Client
         {
             var serviceHost = new ServiceHost(typeof(ViewGetter));
             var serviceEndpoint = serviceHost.AddServiceEndpoint(typeof(IViewGetter), new WebHttpBinding(), "http://127.0.0.1/ViewGetter");
+            serviceEndpoint.Binding.ReceiveTimeout= TimeSpan.FromSeconds(100);
+
             serviceEndpoint.Behaviors.Add(new WebHttpBehavior());
             serviceHost.Open();
 
             var apiServiceHost = new ServiceHost(typeof(Api));
             var apiServiceEndpoint = apiServiceHost.AddServiceEndpoint(typeof(IApi), new WebHttpBinding(), "http://127.0.0.1/api");
             apiServiceEndpoint.Behaviors.Add(new WebHttpBehavior());
+            apiServiceEndpoint.Binding.ReceiveTimeout = TimeSpan.FromSeconds(100);
             apiServiceHost.Open();
 
             Console.ReadLine();

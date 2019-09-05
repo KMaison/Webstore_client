@@ -1,7 +1,9 @@
 function orderProducts() {
     var fn = function (request) {
         var result = request.responseXML.childNodes[0].childNodes[0].nodeValue;
-        return result; //todo: jak dobrze to usun z local storage
+        if(result==="true")
+        window.location.href = 'finish.html';
+        return result; 
     };
 
     var clientOrder = getClientOrder();
