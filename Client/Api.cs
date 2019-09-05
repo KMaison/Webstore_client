@@ -23,14 +23,16 @@ namespace Client.Adapter
 
                 foreach (var orderProduct in order.OrderProducts)
                 {
-                    parameters += ";" + orderProduct.Amount + "," + orderProduct.BarCode  /*+ clresponse*/;
+                    parameters += ";" + orderProduct.Amount + "," + orderProduct.BarCode  /*+ clresponse*/;//Order products
+
+                    parameters += ";" + orderProduct.BarCode + "," + orderProduct.Amount  /*+ clresponse*/;//Buy Products
                     //TODO:
                     //client.BuyProduct(orderProduct.BarCode, orderProduct.Amount);                    
                     //var bpresponse = rpcClient.CallBuying("BuyProduct?" + orderProduct.BarCode + "," + orderProduct.Amount);
                 }
                 parameters += ";";
                 var opresponse = rpcClient.CallBuying(parameters);
-                Console.WriteLine(" [.] Got '{0}'", opresponse);
+                Console.WriteLine(" [.] Buing got '{0}'", opresponse);
                 
             }
             catch
