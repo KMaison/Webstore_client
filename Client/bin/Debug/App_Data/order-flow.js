@@ -3,6 +3,7 @@ function orderProducts() {
         var result = request.responseXML.childNodes[0].childNodes[0].nodeValue;
         if(result==="true")
         window.location.href = 'finish.html';
+        else window.location.href = 'bad.html';
         return result; 
     };
 
